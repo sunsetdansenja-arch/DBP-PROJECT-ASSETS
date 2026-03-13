@@ -12,7 +12,6 @@
     <style>
         body { font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; background-color: #ECECEF; overflow-x: hidden; }
         .glass { background: rgba(236, 236, 239, 0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
-        .glass-card { background: rgba(255, 255, 255, 0.6); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
         
         /* Industrial Brutalism Styles */
         .brutal-border { border: 4px solid #18181B; }
@@ -94,6 +93,7 @@
 
             <div id="staff-list" class="space-y-8"></div>
         </section>
+
     </main>
 
     <div id="bottom-bar" class="fixed bottom-6 left-5 right-5 z-40 hidden animate-slide-up">
@@ -109,13 +109,13 @@
     </div>
 
     <div id="modal-book" class="fixed inset-0 z-[60] glass hidden flex items-end sm:items-center justify-center p-4">
-        <div class="bg-white w-full max-w-sm rounded-[36px] p-6 sm:p-8 brutal-border brutal-shadow animate-slide-up overflow-y-auto max-h-[90vh]">
-            <h2 class="font-black text-3xl mb-1 text-center tracking-tighter uppercase text-zinc-900">Finalisasi</h2>
-            <p class="text-xs font-bold text-zinc-500 text-center mb-6 uppercase tracking-wide">Pilih Jadwal & Data Diri</p>
+        <div class="bg-white w-full max-w-sm rounded-[36px] p-8 brutal-border brutal-shadow animate-slide-up max-h-[90vh] overflow-y-auto">
+            <h2 class="font-black text-4xl mb-1 text-center tracking-tighter uppercase text-zinc-900">Finalisasi</h2>
+            <p class="text-xs font-bold text-zinc-500 text-center mb-6 uppercase tracking-wide">Pilih Waktu & Data Diri</p>
             
             <div class="space-y-4">
                 
-                <div class="bg-zinc-100 p-4 rounded-[24px] brutal-border">
+                <div class="bg-zinc-100 p-4 rounded-[24px] brutal-border mb-4">
                     <p class="text-[10px] font-black text-zinc-500 mb-3 uppercase tracking-widest border-b-2 border-zinc-200 pb-2">Pilih Jam (1 Sesi = 1 Jam)</p>
                     <div id="time-slots" class="grid grid-cols-3 gap-2">
                         </div>
@@ -136,7 +136,7 @@
     <script>
         const CONFIG = {
             WEBHOOK_URL: 'https://n8n-mzbmiib3etk4.kangkung.sumopod.my.id/webhook/dbp-public',
-            AVAILABLE_HOURS: ["10:00", "11:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21:00"]
+            AVAILABLE_HOURS: ["10:00", "11:00", "12:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21:00"]
         };
 
         const extractData = (item) => item.json ? item.json : item;
@@ -156,7 +156,7 @@
         };
 
         const APP_LOGIC = {
-            state: { branches: [], packages: [], staffs: [], selectedBranch: null, selectedStaff: null, selectedPackage: null, finalPrice: 0 },
+            state: { branches: [], packages: [], selectedBranch: null, selectedStaff: null, selectedPackage: null, finalPrice: 0 },
 
             async init() {
                 try {
@@ -172,6 +172,7 @@
                     this.state.branches = payload.branches || [];
                     this.state.packages = payload.packages || [];
                     
+                    document.getElementById('branch-list').classList.remove('hidden');
                     this.renderBranches();
                     
                     const splash = document.getElementById('splash-screen');
@@ -187,8 +188,6 @@
             renderBranches() {
                 const container = document.getElementById('branch-list');
                 if (this.state.branches.length === 0) return;
-
-                document.getElementById('branch-list').classList.remove('hidden');
 
                 container.innerHTML = this.state.branches.map((b, index) => {
                     const meta = BRANCH_DATA[b.dpb_branches_name] || {
@@ -239,8 +238,7 @@
                     });
                     
                     const staffData = await res.json();
-                    this.state.staffs = Array.isArray(staffData) ? staffData : [staffData];
-                    this.renderStaff(this.state.staffs);
+                    this.renderStaff(Array.isArray(staffData) ? staffData : [staffData]);
                 } catch (e) { 
                     console.error("Error Staff:", e); 
                 }
@@ -294,31 +292,24 @@
 
             renderTimeSlots() {
                 const container = document.getElementById('time-slots');
-                const staff = this.state.staffs.find(s => s.id === this.state.selectedStaff);
-                
-                // MOCKUP: Ambil array jam yang sudah dibooking dari backend (saat ini belum ada di n8n, jadi array kosong)
-                const bookedHours = staff.booked_hours || []; 
-
                 container.innerHTML = CONFIG.AVAILABLE_HOURS.map(h => {
-                    const isBooked = bookedHours.includes(h);
-                    if (isBooked) {
-                        return `<button disabled class="bg-zinc-200 brutal-border text-zinc-400 py-2 rounded-xl text-xs font-black opacity-50 cursor-not-allowed line-through">${h}</button>`;
-                    } else {
-                        return `<button id="btn-time-${h.replace(':','')}" onclick="APP_LOGIC.selectTime('${h}')" class="time-btn glass-card brutal-border text-zinc-900 py-2 rounded-xl text-xs font-black hover:bg-orange-200 transition-colors">${h}</button>`;
-                    }
+                    // Logic statis dulu: semua jam bisa diklik (blm terhubung backend untuk cek jam yg penuh)
+                    return `<button id="btn-time-${h.replace(':','')}" onclick="APP_LOGIC.selectTime('${h}')" class="time-btn bg-white brutal-border brutal-shadow-sm text-zinc-900 py-3 rounded-xl text-xs font-black hover-brutal transition-all active-brutal">${h}</button>`;
                 }).join('');
             },
 
             selectTime(hour) {
                 document.getElementById('booking_time').value = hour;
-                // Reset semua tombol jam
+                
+                // Reset semua tombol jam ke warna putih
                 document.querySelectorAll('.time-btn').forEach(btn => {
                     btn.classList.remove('bg-orange-500', 'text-white');
-                    btn.classList.add('glass-card', 'text-zinc-900');
+                    btn.classList.add('bg-white', 'text-zinc-900');
                 });
-                // Highlight tombol yang dipilih
+                
+                // Nyalakan tombol yang dipilih jadi oranye
                 const selectedBtn = document.getElementById(`btn-time-${hour.replace(':','')}`);
-                selectedBtn.classList.remove('glass-card', 'text-zinc-900');
+                selectedBtn.classList.remove('bg-white', 'text-zinc-900');
                 selectedBtn.classList.add('bg-orange-500', 'text-white');
             },
 
@@ -327,7 +318,7 @@
                 const phone = document.getElementById('cust_phone').value.trim();
                 const jam = document.getElementById('booking_time').value;
 
-                if(!name || !phone || !jam) return alert('Pilih Jam dan lengkapi data dulu, Bos.');
+                if(!name || !phone || !jam) return alert('Pilih Jam dan isi data diri dulu, Bos.');
 
                 const btn = document.getElementById('btn-submit');
                 btn.innerText = "LOADING..."; btn.disabled = true;
