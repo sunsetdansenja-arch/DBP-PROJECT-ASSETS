@@ -13,6 +13,10 @@
         body { font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; background-color: #ECECEF; overflow-x: hidden; }
         .glass { background: rgba(236, 236, 239, 0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
         
+        /* Hide scrollbar for horizontal scroll but keep functionality */
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
         /* Industrial Brutalism Styles */
         .brutal-border { border: 4px solid #18181B; }
         .brutal-shadow { box-shadow: 8px 8px 0px 0px #18181B; }
@@ -20,16 +24,13 @@
         .hover-brutal:hover { transform: translate(-2px, -2px); box-shadow: 10px 10px 0px 0px #18181B; }
         .active-brutal:active { transform: translate(4px, 4px); box-shadow: 0px 0px 0px 0px #18181B; }
 
-        /* Exclusive Animations */
+        /* Animations */
         @keyframes slideUpFade { 0% { opacity: 0; transform: translateY(40px); } 100% { opacity: 1; transform: translateY(0); } }
         .animate-slide-up { animation: slideUpFade 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-        
         @keyframes strobe { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
         .animate-strobe { animation: strobe 0.8s step-end infinite; }
-
         @keyframes brutalPulse { 0%, 100% { transform: scale(1); box-shadow: 8px 8px 0px 0px #18181B; } 50% { transform: scale(1.05); box-shadow: 16px 16px 0px 0px #EA580C; } }
         .animate-brutal-pulse { animation: brutalPulse 0.5s infinite; }
-
         @keyframes slideOutUp { 0% { transform: translateY(0); } 100% { transform: translateY(-100vh); display: none; } }
         .slide-out-up { animation: slideOutUp 0.7s cubic-bezier(0.85, 0, 0.15, 1) forwards; }
     </style>
@@ -93,7 +94,6 @@
 
             <div id="staff-list" class="space-y-8"></div>
         </section>
-
     </main>
 
     <div id="bottom-bar" class="fixed bottom-6 left-5 right-5 z-40 hidden animate-slide-up">
@@ -109,23 +109,30 @@
     </div>
 
     <div id="modal-book" class="fixed inset-0 z-[60] glass hidden flex items-end sm:items-center justify-center p-4">
-        <div class="bg-white w-full max-w-sm rounded-[36px] p-8 brutal-border brutal-shadow animate-slide-up max-h-[90vh] overflow-y-auto">
-            <h2 class="font-black text-4xl mb-1 text-center tracking-tighter uppercase text-zinc-900">Finalisasi</h2>
-            <p class="text-xs font-bold text-zinc-500 text-center mb-6 uppercase tracking-wide">Pilih Waktu & Data Diri</p>
+        <div class="bg-white w-full max-w-sm rounded-[36px] p-6 sm:p-8 brutal-border brutal-shadow animate-slide-up max-h-[90vh] overflow-y-auto hide-scrollbar">
+            <h2 class="font-black text-3xl mb-1 text-center tracking-tighter uppercase text-zinc-900">Finalisasi</h2>
+            <p class="text-xs font-bold text-zinc-500 text-center mb-6 uppercase tracking-wide">Pilih Jadwal & Data Diri</p>
             
             <div class="space-y-4">
                 
-                <div class="bg-zinc-100 p-4 rounded-[24px] brutal-border mb-4">
-                    <p class="text-[10px] font-black text-zinc-500 mb-3 uppercase tracking-widest border-b-2 border-zinc-200 pb-2">Pilih Jam (1 Sesi = 1 Jam)</p>
+                <div class="bg-zinc-100 p-4 rounded-[24px] brutal-border">
+                    <p class="text-[10px] font-black text-zinc-500 mb-3 uppercase tracking-widest border-b-2 border-zinc-200 pb-2">Pilih Tanggal</p>
+                    <div id="date-slots" class="flex gap-2 overflow-x-auto hide-scrollbar pb-2 pt-1 px-1">
+                        </div>
+                    <input type="hidden" id="booking_date" value="">
+                </div>
+
+                <div class="bg-zinc-100 p-4 rounded-[24px] brutal-border">
+                    <p class="text-[10px] font-black text-zinc-500 mb-3 uppercase tracking-widest border-b-2 border-zinc-200 pb-2">Pilih Jam</p>
                     <div id="time-slots" class="grid grid-cols-3 gap-2">
                         </div>
                     <input type="hidden" id="booking_time" value="">
                 </div>
 
-                <input type="text" id="cust_name" placeholder="NAMA LENGKAP" class="w-full bg-zinc-100 brutal-border rounded-[20px] px-5 py-4 focus:ring-4 focus:ring-orange-500 focus:bg-white outline-none text-sm font-black uppercase placeholder-zinc-400 transition-all">
+                <input type="text" id="cust_name" placeholder="NAMA LENGKAP" class="w-full bg-zinc-100 brutal-border rounded-[20px] px-5 py-4 focus:ring-4 focus:ring-orange-500 focus:bg-white outline-none text-sm font-black uppercase placeholder-zinc-400 transition-all mt-2">
                 <input type="tel" id="cust_phone" placeholder="WHATSAPP (08...)" class="w-full bg-zinc-100 brutal-border rounded-[20px] px-5 py-4 focus:ring-4 focus:ring-orange-500 focus:bg-white outline-none text-sm font-black uppercase placeholder-zinc-400 transition-all">
                 
-                <button id="btn-submit" onclick="APP_LOGIC.submitBooking()" class="w-full bg-orange-600 text-white py-4 rounded-[20px] font-black uppercase tracking-widest mt-4 brutal-border brutal-shadow-sm active-brutal transition-all">
+                <button id="btn-submit" onclick="APP_LOGIC.submitBooking()" class="w-full bg-orange-600 text-white py-4 rounded-[20px] font-black uppercase tracking-widest mt-4 brutal-border brutal-shadow-sm active-brutal transition-all disabled:opacity-50">
                     Konfirmasi
                 </button>
                 <button onclick="APP_LOGIC.closeModal()" class="w-full text-xs font-black text-zinc-400 uppercase tracking-widest py-4 active:scale-95 transition-all">Batal</button>
@@ -145,18 +152,16 @@
         const BRANCH_DATA = {
             "DI BAWAH POHON KEMANG": {
                 img: "https://raw.githubusercontent.com/sunsetdansenja-arch/DBP-PROJECT-ASSETS/main/DBP%20KEMANG.jpg",
-                rating: "4.9", rev: "150+",
-                tags: "<span>☕ Free Coffee</span><span>🚬 Smoking Area</span><span>🎮 PS5</span>"
+                rating: "4.9", rev: "150+", tags: "<span>☕ Free Coffee</span><span>🚬 Smoking Area</span><span>🎮 PS5</span>"
             },
             "DI BAWAH POHON CANGGU": {
                 img: "https://raw.githubusercontent.com/sunsetdansenja-arch/DBP-PROJECT-ASSETS/main/DBP%20CANGGU.jpg",
-                rating: "4.8", rev: "210+",
-                tags: "<span>🍻 Welcome Drink</span><span>🎱 Billiard</span>"
+                rating: "4.8", rev: "210+", tags: "<span>🍻 Welcome Drink</span><span>🎱 Billiard</span>"
             }
         };
 
         const APP_LOGIC = {
-            state: { branches: [], packages: [], selectedBranch: null, selectedStaff: null, selectedPackage: null, finalPrice: 0 },
+            state: { branches: [], packages: [], staffs: [], selectedBranch: null, selectedStaff: null, selectedPackage: null, finalPrice: 0 },
 
             async init() {
                 try {
@@ -191,8 +196,7 @@
 
                 container.innerHTML = this.state.branches.map((b, index) => {
                     const meta = BRANCH_DATA[b.dpb_branches_name] || {
-                        img: "https://raw.githubusercontent.com/sunsetdansenja-arch/DBP-PROJECT-ASSETS/main/LOGO%20DI%20BAWAH%20POHON.png",
-                        rating: "4.8", rev: "100+", tags: "<span>Premium Barbershop</span>"
+                        img: "https://raw.githubusercontent.com/sunsetdansenja-arch/DBP-PROJECT-ASSETS/main/LOGO%20DI%20BAWAH%20POHON.png", rating: "4.8", rev: "100+", tags: "<span>Premium Barbershop</span>"
                     };
 
                     return `
@@ -238,10 +242,9 @@
                     });
                     
                     const staffData = await res.json();
-                    this.renderStaff(Array.isArray(staffData) ? staffData : [staffData]);
-                } catch (e) { 
-                    console.error("Error Staff:", e); 
-                }
+                    this.state.staffs = Array.isArray(staffData) ? staffData : [staffData];
+                    this.renderStaff(this.state.staffs);
+                } catch (e) { console.error("Error Staff:", e); }
             },
 
             renderStaff(staffs) {
@@ -283,31 +286,100 @@
                 document.getElementById('bottom-bar').classList.remove('hidden');
             },
 
+            generateDates() {
+                const dates = [];
+                const today = new Date();
+                const monthNames = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Ags", "Sep", "Okt", "Nov", "Des"];
+                const dayNames = ["Min", "Sen", "Sel", "Rab", "Kam", "Jum", "Sab"];
+                
+                for(let i=0; i<8; i++) {
+                    const d = new Date(today);
+                    d.setDate(d.getDate() + i);
+                    const day = d.getDate().toString().padStart(2, '0');
+                    const month = monthNames[d.getMonth()];
+                    const dayName = dayNames[d.getDay()];
+                    const year = d.getFullYear();
+                    
+                    const display = i === 0 ? "Hari Ini" : `${dayName}, ${day} ${month}`;
+                    const value = `${year}-${(d.getMonth()+1).toString().padStart(2,'0')}-${day}`;
+                    dates.push({ display, value });
+                }
+                return dates;
+            },
+
             openBookingForm() { 
-                this.renderTimeSlots();
+                this.renderDateSlots();
+                // Reset form values
+                document.getElementById('booking_date').value = '';
+                document.getElementById('booking_time').value = '';
+                this.renderTimeSlots(); // Awal render (semua disable krn tanggal belum dipilih)
                 document.getElementById('modal-book').classList.remove('hidden'); 
             },
             
             closeModal() { document.getElementById('modal-book').classList.add('hidden'); },
 
+            renderDateSlots() {
+                const container = document.getElementById('date-slots');
+                const dates = this.generateDates();
+                container.innerHTML = dates.map(d => {
+                    return `<button id="btn-date-${d.value}" onclick="APP_LOGIC.selectDate('${d.value}')" class="date-btn flex-shrink-0 bg-white brutal-border brutal-shadow-sm text-zinc-900 px-5 py-3 rounded-xl text-xs font-black hover-brutal transition-all active-brutal whitespace-nowrap">${d.display}</button>`;
+                }).join('');
+            },
+
+            selectDate(dateValue) {
+                document.getElementById('booking_date').value = dateValue;
+                
+                // Reset UI Tanggal
+                document.querySelectorAll('.date-btn').forEach(btn => {
+                    btn.classList.remove('bg-orange-500', 'text-white');
+                    btn.classList.add('bg-white', 'text-zinc-900');
+                });
+                
+                // Highlight Tanggal
+                const selectedBtn = document.getElementById(`btn-date-${dateValue}`);
+                selectedBtn.classList.remove('bg-white', 'text-zinc-900');
+                selectedBtn.classList.add('bg-orange-500', 'text-white');
+
+                // Reset Jam jika tanggal ganti
+                document.getElementById('booking_time').value = '';
+                this.renderTimeSlots();
+            },
+
             renderTimeSlots() {
                 const container = document.getElementById('time-slots');
+                const selectedDate = document.getElementById('booking_date').value;
+                const staff = this.state.staffs.find(s => s.id === this.state.selectedStaff);
+                
+                // MOCKUP N8N: Array slot yang penuh formatnya "YYYY-MM-DD_HH:MM"
+                // Contoh: ["2026-03-14_10:00"]
+                const bookedSlots = staff.booked_slots || []; 
+
+                if (!selectedDate) {
+                    // Jika belum pilih tanggal, jam di-disable dengan tulisan "PILIH TANGGAL"
+                    container.innerHTML = `<div class="col-span-3 text-center py-4 text-xs font-bold text-zinc-400 uppercase tracking-widest border-2 border-dashed border-zinc-300 rounded-xl">Pilih Tanggal Dulu</div>`;
+                    return;
+                }
+
                 container.innerHTML = CONFIG.AVAILABLE_HOURS.map(h => {
-                    // Logic statis dulu: semua jam bisa diklik (blm terhubung backend untuk cek jam yg penuh)
-                    return `<button id="btn-time-${h.replace(':','')}" onclick="APP_LOGIC.selectTime('${h}')" class="time-btn bg-white brutal-border brutal-shadow-sm text-zinc-900 py-3 rounded-xl text-xs font-black hover-brutal transition-all active-brutal">${h}</button>`;
+                    const slotKey = `${selectedDate}_${h}`;
+                    const isBooked = bookedSlots.includes(slotKey);
+
+                    if (isBooked) {
+                        return `<button disabled class="bg-zinc-200 brutal-border text-zinc-400 py-3 rounded-xl text-xs font-black opacity-40 cursor-not-allowed line-through">${h}</button>`;
+                    } else {
+                        return `<button id="btn-time-${h.replace(':','')}" onclick="APP_LOGIC.selectTime('${h}')" class="time-btn bg-white brutal-border brutal-shadow-sm text-zinc-900 py-3 rounded-xl text-xs font-black hover-brutal transition-all active-brutal">${h}</button>`;
+                    }
                 }).join('');
             },
 
             selectTime(hour) {
                 document.getElementById('booking_time').value = hour;
                 
-                // Reset semua tombol jam ke warna putih
                 document.querySelectorAll('.time-btn').forEach(btn => {
                     btn.classList.remove('bg-orange-500', 'text-white');
                     btn.classList.add('bg-white', 'text-zinc-900');
                 });
                 
-                // Nyalakan tombol yang dipilih jadi oranye
                 const selectedBtn = document.getElementById(`btn-time-${hour.replace(':','')}`);
                 selectedBtn.classList.remove('bg-white', 'text-zinc-900');
                 selectedBtn.classList.add('bg-orange-500', 'text-white');
@@ -316,9 +388,10 @@
             async submitBooking() {
                 const name = document.getElementById('cust_name').value.trim();
                 const phone = document.getElementById('cust_phone').value.trim();
+                const tanggal = document.getElementById('booking_date').value;
                 const jam = document.getElementById('booking_time').value;
 
-                if(!name || !phone || !jam) return alert('Pilih Jam dan isi data diri dulu, Bos.');
+                if(!name || !phone || !tanggal || !jam) return alert('Pilih Tanggal, Jam, dan isi data diri dulu, Bos.');
 
                 const btn = document.getElementById('btn-submit');
                 btn.innerText = "LOADING..."; btn.disabled = true;
@@ -328,7 +401,7 @@
                         method: 'POST',
                         headers: {'Content-Type': 'application/json'},
                         body: JSON.stringify({
-                            action: 'submit_booking', cust_name: name, cust_phone: phone, jam: jam,
+                            action: 'submit_booking', cust_name: name, cust_phone: phone, tanggal: tanggal, jam: jam,
                             branch_id: this.state.selectedBranch, capster_id: this.state.selectedStaff,
                             package_id: this.state.selectedPackage, price: this.state.finalPrice
                         })
