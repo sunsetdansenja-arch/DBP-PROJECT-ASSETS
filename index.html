@@ -13,18 +13,15 @@
         body { font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; background-color: #ECECEF; overflow-x: hidden; }
         .glass { background: rgba(236, 236, 239, 0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
         
-        /* Hide scrollbar for horizontal scroll */
         .hide-scrollbar::-webkit-scrollbar { display: none; }
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-        /* Industrial Brutalism Styles */
         .brutal-border { border: 4px solid #18181B; }
         .brutal-shadow { box-shadow: 8px 8px 0px 0px #18181B; }
         .brutal-shadow-sm { box-shadow: 4px 4px 0px 0px #18181B; }
         .hover-brutal:hover { transform: translate(-2px, -2px); box-shadow: 10px 10px 0px 0px #18181B; }
         .active-brutal:active { transform: translate(4px, 4px); box-shadow: 0px 0px 0px 0px #18181B; }
 
-        /* Exclusive Animations */
         @keyframes slideUpFade { 0% { opacity: 0; transform: translateY(40px); } 100% { opacity: 1; transform: translateY(0); } }
         .animate-slide-up { animation: slideUpFade 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
         @keyframes strobe { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
@@ -137,7 +134,7 @@
         };
 
         const APP_LOGIC = {
-            state: { branches: [], packages: [], selectedBranch: null, selectedStaff: null, selectedPackage: null, finalPrice: 0 },
+            state: { branches: [], packages: [], staffs: [], selectedBranch: null, selectedStaff: null, selectedPackage: null, finalPrice: 0 },
 
             async init() {
                 try {
@@ -210,7 +207,9 @@
                     });
                     
                     const staffData = await res.json();
-                    this.renderStaff(Array.isArray(staffData) ? staffData : [staffData]);
+                    // SIMPAN DATA STAFF DI MEMORI AGAR BISA BACA JAM PENUH NANTI
+                    this.state.staffs = Array.isArray(staffData) ? staffData : [staffData];
+                    this.renderStaff(this.state.staffs);
                 } catch (e) { console.error("Error Staff:", e); }
             },
 
@@ -313,9 +312,25 @@
                     return;
                 }
 
-                container.innerHTML = CONFIG.AVAILABLE_HOURS.map(h => `
-                    <button id="btn-time-${h.replace(':','')}" onclick="APP_LOGIC.selectTime('${h}')" class="time-btn bg-white brutal-border brutal-shadow-sm text-zinc-900 py-3 rounded-xl text-xs font-black hover-brutal transition-all active-brutal">${h}</button>
-                `).join('');
+                // Cek data capster yang lagi dipilih
+                const selectedStaffData = this.state.staffs.find(s => s.id === this.state.selectedStaff);
+                
+                // Ambil daftar jam yang udah penuh dari n8n (kalau ada)
+                const bookedSlots = selectedStaffData ? (selectedStaffData.booked_slots || []) : [];
+
+                container.innerHTML = CONFIG.AVAILABLE_HOURS.map(h => {
+                    // Gabungin Tanggal dan Jam untuk dicek ke n8n (Contoh: "2026-03-14_10:00")
+                    const slotKey = `${selectedDate}_${h}`;
+                    
+                    // Cek apakah slot ini ada di dalam list bookedSlots dari n8n
+                    if (bookedSlots.includes(slotKey)) {
+                        // Kalau UDAH DIBOOKING, tombolnya MATI, warna ABU, dan DICORET
+                        return `<button disabled class="bg-zinc-200 brutal-border text-zinc-400 py-3 rounded-xl text-xs font-black opacity-50 cursor-not-allowed line-through">${h}</button>`;
+                    } else {
+                        // Kalau KOSONG, tombolnya NYALA dan BISA DIPILIH
+                        return `<button id="btn-time-${h.replace(':','')}" onclick="APP_LOGIC.selectTime('${h}')" class="time-btn bg-white brutal-border brutal-shadow-sm text-zinc-900 py-3 rounded-xl text-xs font-black hover-brutal transition-all active-brutal">${h}</button>`;
+                    }
+                }).join('');
             },
 
             selectTime(hour) {
