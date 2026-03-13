@@ -10,7 +10,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
 
     <style>
-        body { font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; background-color: #ECECEF; }
+        body { font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; background-color: #ECECEF; overflow-x: hidden; }
         .glass { background: rgba(236, 236, 239, 0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
         
         /* Industrial Brutalism Styles */
@@ -25,17 +25,39 @@
         .animate-slide-up { animation: slideUpFade 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
         
         @keyframes strobe { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
-        .animate-strobe { animation: strobe 1s step-end infinite; }
+        .animate-strobe { animation: strobe 0.8s step-end infinite; }
+
+        @keyframes brutalPulse { 0%, 100% { transform: scale(1); box-shadow: 8px 8px 0px 0px #18181B; } 50% { transform: scale(1.05); box-shadow: 16px 16px 0px 0px #EA580C; } }
+        .animate-brutal-pulse { animation: brutalPulse 0.5s infinite; }
+
+        @keyframes slideOutUp { 0% { transform: translateY(0); } 100% { transform: translateY(-100vh); display: none; } }
+        .slide-out-up { animation: slideOutUp 0.7s cubic-bezier(0.85, 0, 0.15, 1) forwards; }
     </style>
 </head>
 <body class="text-zinc-900 pb-32">
+
+    <div id="splash-screen" class="fixed inset-0 z-[100] bg-zinc-900 flex flex-col items-center justify-center overflow-hidden">
+        <div class="absolute inset-0 opacity-5 flex flex-wrap content-start -rotate-12 pointer-events-none text-orange-500 font-black text-6xl leading-tight break-all">
+            DBP DBP DBP DBP DBP DBP DBP DBP DBP DBP DBP DBP DBP DBP DBP DBP DBP DBP DBP DBP DBP
+        </div>
+        <img src="https://raw.githubusercontent.com/sunsetdansenja-arch/DBP-PROJECT-ASSETS/main/LOGO%20DI%20BAWAH%20POHON.png" 
+             class="w-48 relative z-10 bg-white p-4 rounded-2xl brutal-border animate-brutal-pulse">
+        <h1 class="mt-10 text-orange-500 font-black text-3xl tracking-widest uppercase relative z-10 animate-strobe">SYSTEM_BOOT</h1>
+    </div>
+
+    <div id="success-screen" class="fixed inset-0 z-[100] bg-orange-600 hidden flex-col items-center justify-center overflow-hidden">
+        <img src="https://raw.githubusercontent.com/sunsetdansenja-arch/DBP-PROJECT-ASSETS/main/LOGO%20DI%20BAWAH%20POHON.png" 
+             class="w-40 relative z-10 bg-white p-4 rounded-2xl brutal-border brutal-shadow mb-8 animate-brutal-pulse">
+        <h1 class="text-zinc-900 font-black text-6xl tracking-tighter uppercase relative z-10 text-center leading-none">BOOKING<br>SUKSES</h1>
+        <p class="mt-6 text-zinc-900 font-black tracking-widest uppercase border-4 border-zinc-900 px-6 py-3 bg-white brutal-shadow-sm rounded-xl">Sampai Jumpa di Kursi Eksekusi</p>
+    </div>
 
     <nav class="sticky top-0 z-50 glass border-b-4 border-zinc-900 px-6 py-5 flex justify-between items-center brutal-shadow-sm">
         <img src="https://raw.githubusercontent.com/sunsetdansenja-arch/DBP-PROJECT-ASSETS/main/LOGO%20DI%20BAWAH%20POHON.png" class="h-8 w-auto" alt="Logo DBP">
         <div class="text-[10px] font-black uppercase tracking-widest text-white bg-orange-600 px-3 py-1 rounded-md brutal-border">Booking</div>
     </nav>
 
-    <main id="app" class="max-w-md mx-auto px-5 mt-8">
+    <main id="app" class="max-w-md mx-auto px-5 mt-8 relative z-10">
         
         <section id="step-initial" class="animate-slide-up">
             <h1 class="font-black text-5xl mb-2 tracking-tighter uppercase leading-none text-zinc-900 drop-shadow-md">Pilih<br>Cabang</h1>
@@ -59,11 +81,7 @@
                 </ul>
             </div>
 
-            <div id="loading-state" class="bg-orange-500 brutal-border brutal-shadow rounded-[32px] p-8 text-center animate-strobe mb-8">
-                <h2 class="font-black text-3xl text-zinc-900 tracking-tighter uppercase leading-none">Sedang<br>Mencari<br>Kursi Kosong...</h2>
-            </div>
-
-            <div id="branch-list" class="space-y-8 hidden"></div>
+            <div id="branch-list" class="space-y-8"></div>
         </section>
 
         <section id="step-staff" class="hidden animate-slide-up">
@@ -108,14 +126,13 @@
     </div>
 
     <script>
-        // LOGIKA TETAP 100% SAMA, HANYA RENDER HTML YANG DI-UPGRADE
         const CONFIG = {
             WEBHOOK_URL: 'https://n8n-mzbmiib3etk4.kangkung.sumopod.my.id/webhook/dbp-public'
         };
 
         const extractData = (item) => item.json ? item.json : item;
+        const delay = ms => new Promise(res => setTimeout(res, ms));
 
-        // Helper untuk foto dan fasilitas cabang statis agar UX maksimal
         const BRANCH_DATA = {
             "DI BAWAH POHON KEMANG": {
                 img: "https://raw.githubusercontent.com/sunsetdansenja-arch/DBP-PROJECT-ASSETS/main/DBP%20KEMANG.jpg",
@@ -134,27 +151,31 @@
 
             async init() {
                 try {
-                    const res = await fetch(CONFIG.WEBHOOK_URL, {
+                    // Fetch data dari n8n secara paralel dengan timer splash screen
+                    const fetchPromise = fetch(CONFIG.WEBHOOK_URL, {
                         method: 'POST',
                         headers: {'Content-Type': 'application/json'},
                         body: JSON.stringify({ action: 'get_initial_data' })
-                    });
+                    }).then(res => res.json());
+
+                    // Tunggu minimal 2.5 detik untuk pamer animasi Splash Screen, sambil nunggu n8n selesai mikir
+                    const [rawData] = await Promise.all([fetchPromise, delay(2500)]);
                     
-                    const data = await res.json();
-                    const payload = Array.isArray(data) ? data[0] : data;
+                    const payload = Array.isArray(rawData) ? rawData[0] : rawData;
                     
                     this.state.branches = payload.branches || [];
                     this.state.packages = payload.packages || [];
                     
-                    // Matikan loading brutal, nyalakan list cabang
-                    document.getElementById('loading-state').classList.add('hidden');
-                    document.getElementById('branch-list').classList.remove('hidden');
-                    
                     this.renderBranches();
+                    
+                    // Tutup Splash Screen dengan brutal
+                    const splash = document.getElementById('splash-screen');
+                    splash.classList.add('slide-out-up');
+                    setTimeout(() => splash.remove(), 700);
+
                 } catch (e) {
                     console.error("Connection Error:", e);
-                    document.getElementById('loading-state').innerHTML = `<h2 class="font-black text-xl text-zinc-900">GAGAL MENGHUBUNGI SERVER</h2>`;
-                    document.getElementById('loading-state').classList.remove('animate-strobe');
+                    document.getElementById('splash-screen').innerHTML = `<h1 class="text-white font-black text-3xl">GAGAL KONEKSI SERVER</h1>`;
                 }
             },
 
@@ -170,24 +191,19 @@
 
                     return `
                     <div onclick="APP_LOGIC.selectBranch('${b.dpb_branches_name}')" class="group relative bg-white brutal-border rounded-[40px] brutal-shadow hover-brutal active-brutal transition-all cursor-pointer block animate-slide-up" style="animation-delay: ${index * 0.1}s">
-                        
                         <div class="relative w-full h-72 border-b-4 border-zinc-900 overflow-hidden rounded-t-[36px]">
                             <img src="${meta.img}" class="w-full h-full object-cover grayscale-[30%] group-hover:grayscale-0 group-hover:scale-105 transition-all duration-500">
-                            
                             <div class="absolute top-5 right-5 bg-white brutal-border font-black text-sm px-3 py-1.5 brutal-shadow-sm flex items-center gap-1 rounded-xl">
                                 ⭐️ ${meta.rating} <span class="text-[9px] text-zinc-500 uppercase tracking-widest ml-1">(${meta.rev} Rev)</span>
                             </div>
-
                             <div class="absolute top-5 left-5 bg-orange-500 text-white brutal-border font-black text-[10px] px-3 py-2 brutal-shadow-sm uppercase tracking-widest rounded-xl">
                                 🔴 10:00 - 21:30
                             </div>
                         </div>
-
                         <div class="p-6 relative">
                             <h3 class="font-black text-3xl text-zinc-900 uppercase tracking-tighter -mt-12 mb-4 bg-white inline-block brutal-border px-5 py-2 brutal-shadow-sm relative z-10 rounded-2xl">
                                 ${b.dpb_branches_name.replace('DI BAWAH POHON ', '')}
                             </h3>
-                            
                             <div class="flex flex-wrap gap-2 text-[10px] font-black uppercase tracking-widest [&>span]:bg-zinc-100 [&>span]:brutal-border [&>span]:px-3 [&>span]:py-1.5 [&>span]:rounded-lg">
                                 ${meta.tags}
                             </div>
@@ -203,7 +219,6 @@
                 document.getElementById('step-staff').classList.remove('hidden');
                 document.getElementById('selected-branch-text').innerText = name;
                 
-                // Loading capster
                 document.getElementById('staff-list').innerHTML = `
                     <div class="bg-orange-500 brutal-border brutal-shadow rounded-[32px] p-8 text-center animate-strobe">
                         <h2 class="font-black text-2xl text-zinc-900 tracking-tighter uppercase leading-none">Menyiapkan<br>Peralatan...</h2>
@@ -232,25 +247,19 @@
 
                 container.innerHTML = staffs.map((s, index) => `
                     <div class="bg-white brutal-border rounded-[36px] brutal-shadow p-6 relative animate-slide-up" style="animation-delay: ${index * 0.1}s">
-                        
                         ${s.is_top_performance ? '<div class="absolute -top-4 -right-2 bg-orange-600 brutal-border text-white text-[10px] font-black px-5 py-2 rounded-xl brutal-shadow-sm uppercase tracking-widest transform rotate-3 z-10">🔥 Top Performance</div>' : ''}
-                        
                         <div class="w-full h-64 mb-6">
-                            <img src="${s.photo_url || 'https://via.placeholder.com/150'}" 
-                                 class="w-full h-full rounded-[24px] object-cover object-top brutal-border">
+                            <img src="${s.photo_url || 'https://via.placeholder.com/150'}" class="w-full h-full rounded-[24px] object-cover object-top brutal-border">
                         </div>
-
                         <div class="mb-6 flex justify-between items-end">
                             <div>
                                 <h4 class="font-black text-4xl text-zinc-900 tracking-tighter uppercase leading-none">${s.dbp_staff_name}</h4>
                                 <p class="text-[10px] font-black text-zinc-900 bg-orange-400 uppercase tracking-widest mt-2 inline-block px-3 py-1.5 rounded-lg brutal-border">${s.role}</p>
                             </div>
                         </div>
-
                         <div class="grid grid-cols-1 gap-3">
                             ${(s.services || []).map(ser => `
-                                <button onclick="APP_LOGIC.prepareBooking('${s.id}', '${ser.id}', ${ser.price})" 
-                                        class="group flex justify-between items-center py-4 px-5 rounded-[20px] brutal-border bg-zinc-50 hover:bg-zinc-900 hover:text-white active-brutal transition-all text-left">
+                                <button onclick="APP_LOGIC.prepareBooking('${s.id}', '${ser.id}', ${ser.price})" class="group flex justify-between items-center py-4 px-5 rounded-[20px] brutal-border bg-zinc-50 hover:bg-zinc-900 hover:text-white active-brutal transition-all text-left">
                                     <span class="text-sm font-black uppercase tracking-wide group-hover:text-white">${ser.name}</span>
                                     <span class="text-lg font-black text-orange-600 group-hover:text-orange-400">Rp ${Number(ser.price).toLocaleString('id-ID')}</span>
                                 </button>
@@ -292,7 +301,16 @@
                     });
                     
                     if(res.ok) {
-                        alert('Booking Sukses! Silakan tunggu konfirmasi WA dari kami.');
+                        // Tutup Modal Form
+                        document.getElementById('modal-book').classList.add('hidden');
+                        
+                        // Tampilkan Animasi Success Screen 
+                        const successScreen = document.getElementById('success-screen');
+                        successScreen.classList.remove('hidden');
+                        successScreen.classList.add('flex', 'animate-slide-up');
+                        
+                        // Tahan 3 detik sebelum reload
+                        await delay(3000);
                         location.reload();
                     } else {
                         throw new Error("Server response not OK");
