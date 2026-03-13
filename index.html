@@ -5,12 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Booking | Di Bawah Pohon</title>
     <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/sunsetdansenja-arch/DBP-PROJECT-ASSETS/main/LOGO%20DI%20BAWAH%20POHON.png">
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
 
     <style>
-        :root { --dbp-orange: #E67E22; }
-        body { font-family: 'Inter', sans-serif; background-color: #FBFBFD; }
+        body { font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; background-color: #FBFBFD; }
         .serif-title { font-family: 'Playfair Display', serif; }
         .glass { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); }
         .skeleton { background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%); background-size: 200% 100%; animation: loading 1.5s infinite; }
@@ -25,109 +25,157 @@
     </nav>
 
     <main id="app" class="max-w-md mx-auto px-6 mt-8">
+        
         <section id="step-initial">
             <h1 class="serif-title text-3xl mb-2">Pilih Cabang</h1>
             <p class="text-sm text-gray-500 mb-6">Tentukan lokasi cukur terdekat Anda.</p>
+            
             <div id="branch-list" class="space-y-3">
                 <div class="h-20 skeleton rounded-3xl"></div>
                 <div class="h-20 skeleton rounded-3xl"></div>
             </div>
         </section>
 
-        <section id="step-staff" class="hidden">
-            <button onclick="APP_LOGIC.resetToStep1()" class="text-xs font-semibold text-orange-600 mb-4">← Ganti Cabang</button>
+        <section id="step-staff" class="hidden animate-in fade-in duration-500">
+            <button onclick="APP_LOGIC.resetToStep1()" class="text-xs font-semibold text-orange-600 mb-4 flex items-center">
+                ← Kembali Ganti Cabang
+            </button>
             <h1 class="serif-title text-3xl mb-2">Pilih Capster</h1>
+            <p id="selected-branch-text" class="text-sm text-gray-500 mb-6"></p>
+
             <div id="staff-list" class="space-y-4"></div>
         </section>
+
     </main>
 
     <div id="bottom-bar" class="fixed bottom-0 left-0 right-0 p-6 glass border-t border-gray-200/50 hidden">
         <div class="max-w-md mx-auto flex justify-between items-center">
-            <p id="display-price" class="text-xl font-bold">Rp 0</p>
-            <button onclick="APP_LOGIC.openBookingForm()" class="bg-orange-500 text-white px-8 py-3 rounded-full font-bold shadow-lg shadow-orange-200">Book Now</button>
+            <div>
+                <p class="text-[10px] uppercase text-gray-400 font-bold">Total Harga</p>
+                <p id="display-price" class="text-xl font-bold text-gray-900">Rp 0</p>
+            </div>
+            <button onclick="APP_LOGIC.openBookingForm()" class="bg-orange-500 text-white px-8 py-3 rounded-full font-bold shadow-lg shadow-orange-200 active:scale-95 transition-all">
+                Book Now
+            </button>
+        </div>
+    </div>
+
+    <div id="modal-book" class="fixed inset-0 z-[60] glass hidden flex items-end sm:items-center justify-center p-4">
+        <div class="bg-white w-full max-w-sm rounded-[32px] p-8 shadow-2xl">
+            <h2 class="serif-title text-2xl mb-2 text-center">Data Diri</h2>
+            <p class="text-xs text-gray-400 text-center mb-6">Mohon isi data untuk antrean.</p>
+            
+            <div class="space-y-4">
+                <input type="text" id="cust_name" placeholder="Nama Lengkap" class="w-full bg-gray-50 border-none rounded-2xl px-5 py-4 focus:ring-2 focus:ring-orange-500 outline-none">
+                <input type="tel" id="cust_phone" placeholder="Nomor WhatsApp (08...)" class="w-full bg-gray-50 border-none rounded-2xl px-5 py-4 focus:ring-2 focus:ring-orange-500 outline-none">
+                
+                <button id="btn-submit" onclick="APP_LOGIC.submitBooking()" class="w-full bg-black text-white py-4 rounded-2xl font-bold mt-4 shadow-xl active:scale-95 transition-all">
+                    Konfirmasi Booking
+                </button>
+                <button onclick="APP_LOGIC.closeModal()" class="w-full text-xs text-gray-400 font-semibold py-2">Batal</button>
+            </div>
         </div>
     </div>
 
     <script>
         const CONFIG = {
-            // URL SUDAH GUE FIX KE PRODUCTION
             WEBHOOK_URL: 'https://n8n-mzbmiib3etk4.kangkung.sumopod.my.id/webhook/dbp-public'
         };
 
+        // Helper untuk ekstrak data n8n (karena kadang dibungkus item.json, kadang langsung)
+        const extractData = (item) => item.json ? item.json : item;
+
         const APP_LOGIC = {
-            state: { branches: [], packages: [], selectedBranch: null },
+            state: { branches: [], packages: [], selectedBranch: null, selectedStaff: null, selectedPackage: null, finalPrice: 0 },
 
             async init() {
-                console.log("🚀 Menghubungi n8n...");
                 try {
                     const res = await fetch(CONFIG.WEBHOOK_URL, {
                         method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
+                        headers: {'Content-Type': 'application/json'},
                         body: JSON.stringify({ action: 'get_initial_data' })
                     });
+                    
+                    const rawData = await res.json();
+                    console.log("Data from n8n:", rawData);
 
-                    if (!res.ok) throw new Error(`HTTP Error: ${res.status}`);
+                    // Ambil object utama (n8n biasanya return array di Webhook jika single object)
+                    const data = Array.isArray(rawData) ? rawData[0] : rawData;
 
-                    const data = await res.json();
-                    console.log("✅ Data diterima:", data);
-                    this.state.branches = data.branches;
-                    this.state.packages = data.packages;
+                    if (data && data.branches) {
+                        this.state.branches = Array.isArray(data.branches) ? data.branches.map(extractData) : [extractData(data.branches)];
+                        this.state.packages = Array.isArray(data.packages) ? data.packages.map(extractData) : [extractData(data.packages)];
+                    } else {
+                        console.error("FORMAT ERROR: Data 'branches' tidak ada di response. Cek node Respond Initial di n8n.");
+                    }
+                    
                     this.renderBranches();
                 } catch (e) {
-                    console.error("❌ Error Fetch:", e);
-                    alert("Gagal terhubung ke server n8n. Pastikan workflow sudah ACTIVE dan 'Respond to Options Requests' sudah dicentang.");
+                    console.error("Connection Error:", e);
+                    document.getElementById('branch-list').innerHTML = `<p class="text-red-500 text-sm">Gagal terhubung ke server n8n.</p>`;
                 }
             },
 
             renderBranches() {
                 const container = document.getElementById('branch-list');
+                if (this.state.branches.length === 0) {
+                    container.innerHTML = `<p class="text-gray-500 text-sm">Data cabang kosong. Pastikan Respond Initial di n8n sudah dikonfigurasi.</p>`;
+                    return;
+                }
+
                 container.innerHTML = this.state.branches.map(b => `
-                    <div onclick="APP_LOGIC.selectBranch('${b.dpb_branches_name}')" 
-                         class="bg-white border border-gray-100 p-5 rounded-[24px] shadow-sm flex justify-between items-center active:scale-95 transition-all cursor-pointer">
+                    <div onclick="APP_LOGIC.selectBranch('${b.dpb_branches_name}')" class="bg-white border border-gray-100 p-5 rounded-[24px] shadow-sm flex justify-between items-center active:scale-95 transition-all cursor-pointer">
                         <div>
                             <h3 class="font-bold text-lg">${b.dpb_branches_name}</h3>
-                            <p class="text-xs text-gray-400">${b.dbp_location}</p>
+                            <p class="text-xs text-gray-400">${b.dbp_location || 'Lokasi Tersedia'}</p>
                         </div>
-                        <span class="text-orange-500">→</span>
+                        <span class="text-orange-500 font-bold">→</span>
                     </div>
                 `).join('');
             },
 
             async selectBranch(name) {
-                console.log(`📍 Memilih cabang: ${name}`);
                 this.state.selectedBranch = name;
                 document.getElementById('step-initial').classList.add('hidden');
                 document.getElementById('step-staff').classList.remove('hidden');
+                document.getElementById('selected-branch-text').innerText = `Menampilkan Capster di ${name}`;
                 document.getElementById('staff-list').innerHTML = `<div class="h-40 skeleton rounded-3xl"></div>`;
 
                 try {
                     const res = await fetch(CONFIG.WEBHOOK_URL, {
                         method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
+                        headers: {'Content-Type': 'application/json'},
                         body: JSON.stringify({ action: 'get_staff_list', branch_name: name })
                     });
-                    const staffData = await res.json();
+                    
+                    const rawStaff = await res.json();
+                    const staffData = (Array.isArray(rawStaff) ? rawStaff : [rawStaff]).map(extractData);
                     this.renderStaff(staffData);
-                } catch (e) { console.error("❌ Gagal ambil staff:", e); }
+                } catch (e) { console.error("Error Staff:", e); }
             },
 
             renderStaff(staffs) {
                 const container = document.getElementById('staff-list');
+                if (staffs.length === 0) {
+                    container.innerHTML = `<p class="text-gray-500 text-sm">Tidak ada capster di cabang ini.</p>`;
+                    return;
+                }
+
                 container.innerHTML = staffs.map(s => `
-                    <div class="bg-white border border-gray-100 rounded-[28px] p-6 shadow-sm mb-4">
-                        <div class="flex items-center gap-4 mb-4">
-                            <img src="${s.photo_url}" class="w-12 h-12 rounded-full object-cover">
+                    <div class="bg-white border border-gray-100 rounded-[28px] p-6 shadow-sm mb-4 relative overflow-hidden">
+                        ${s.is_top_performance ? '<div class="absolute top-0 right-0 bg-orange-500 text-white text-[9px] font-bold px-4 py-1 rounded-bl-xl tracking-tighter uppercase">Top Performance</div>' : ''}
+                        <div class="flex items-center gap-4 mb-6">
+                            <img src="${s.photo_url || 'https://via.placeholder.com/150'}" class="w-16 h-16 rounded-full object-cover border-2 border-orange-50">
                             <div>
-                                <h4 class="font-bold text-lg">${s.dbp_staff_name}</h4>
-                                <p class="text-[10px] text-gray-400 uppercase font-bold">${s.role}</p>
+                                <h4 class="font-bold text-xl">${s.dbp_staff_name}</h4>
+                                <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">${s.role}</p>
                             </div>
                         </div>
-                        <div class="space-y-2">
-                            ${s.services.map(ser => `
-                                <button onclick="APP_LOGIC.prep('${s.id}','${ser.id}',${ser.price})" 
-                                        class="w-full flex justify-between p-3 rounded-xl border border-gray-50 active:bg-orange-50">
-                                    <span class="text-sm">${ser.name}</span>
-                                    <span class="text-sm font-bold">Rp ${ser.price.toLocaleString()}</span>
+                        <div class="grid grid-cols-1 gap-2">
+                            ${(s.services || []).map(ser => `
+                                <button onclick="APP_LOGIC.prepareBooking('${s.id}', '${ser.id}', ${ser.price})" class="flex justify-between items-center py-3 px-4 rounded-xl border border-gray-50 hover:border-orange-200 hover:bg-orange-50/30 active:bg-orange-100 transition-all text-left">
+                                    <span class="text-sm font-semibold">${ser.name}</span>
+                                    <span class="text-sm font-bold text-orange-600">Rp ${Number(ser.price).toLocaleString('id-ID')}</span>
                                 </button>
                             `).join('')}
                         </div>
@@ -135,14 +183,51 @@
                 `).join('');
             },
 
-            prep(sid, pid, p) {
-                document.getElementById('display-price').innerText = `Rp ${p.toLocaleString()}`;
+            prepareBooking(staffId, packageId, price) {
+                this.state.selectedStaff = staffId;
+                this.state.selectedPackage = packageId;
+                this.state.finalPrice = price;
+                document.getElementById('display-price').innerText = `Rp ${price.toLocaleString('id-ID')}`;
                 document.getElementById('bottom-bar').classList.remove('hidden');
+            },
+
+            openBookingForm() { document.getElementById('modal-book').classList.remove('hidden'); },
+            closeModal() { document.getElementById('modal-book').classList.add('hidden'); },
+
+            async submitBooking() {
+                const name = document.getElementById('cust_name').value;
+                const phone = document.getElementById('cust_phone').value;
+
+                if(!name || !phone) return alert('Lengkapi data dulu.');
+
+                const btn = document.getElementById('btn-submit');
+                btn.innerText = "Processing..."; btn.disabled = true;
+
+                try {
+                    const res = await fetch(CONFIG.WEBHOOK_URL, {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({
+                            action: 'submit_booking', cust_name: name, cust_phone: phone,
+                            branch_id: this.state.selectedBranch, capster_id: this.state.selectedStaff,
+                            package_id: this.state.selectedPackage, price: this.state.finalPrice
+                        })
+                    });
+                    
+                    if(res.ok) {
+                        alert('Booking Sukses! Silakan tunggu konfirmasi WA dari kami.');
+                        location.reload();
+                    }
+                } catch (e) { 
+                    alert('Gagal kirim data.'); 
+                    btn.innerText = "Konfirmasi Booking"; btn.disabled = false;
+                }
             },
 
             resetToStep1() {
                 document.getElementById('step-initial').classList.remove('hidden');
                 document.getElementById('step-staff').classList.add('hidden');
+                document.getElementById('bottom-bar').classList.add('hidden');
             }
         };
 
