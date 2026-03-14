@@ -14,7 +14,6 @@
         body { font-family: 'Inter', sans-serif; background-color: #F5F5F7; color: #1D1D1F; -webkit-tap-highlight-color: transparent; overflow-x: hidden; }
         
         .apple-shadow { box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04); }
-        .apple-shadow-lg { box-shadow: 0 12px 48px rgba(0, 0, 0, 0.08); }
         .apple-card { background: #FFFFFF; border: 1px solid #E5E5EA; border-radius: 20px; }
         .glass-header { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); border-bottom: 1px solid #E5E5EA; }
         .btn-press:active { transform: scale(0.97); }
@@ -93,7 +92,6 @@
 
         <main id="tab-queue" class="flex-1 overflow-hidden flex flex-col lg:flex-row p-4 gap-4 animate-slide-up">
             <section class="flex-1 flex flex-col overflow-hidden gap-4">
-                
                 <div class="grid grid-cols-3 gap-3 shrink-0">
                     <div class="apple-card p-4 bg-white apple-shadow">
                         <p class="text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1">Omset (Hari Ini)</p>
@@ -181,69 +179,26 @@
     <div id="view-management" class="h-full w-full hidden flex-col absolute inset-0 z-30 bg-[#F5F5F7] overflow-y-auto">
         <header class="sticky top-0 z-40 glass-header px-6 py-4 flex justify-between items-center">
             <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-full bg-zinc-900 flex items-center justify-center shadow-md">
-                    <img src="https://raw.githubusercontent.com/sunsetdansenja-arch/DBP-PROJECT-ASSETS/main/LOGO%20DI%20BAWAH%20POHON.png" class="h-6" style="filter: invert(1);">
-                </div>
-                <div>
-                    <h1 class="font-bold text-lg leading-none tracking-tight text-zinc-900">Executive Dashboard</h1>
-                    <p id="mgt-greeting" class="text-xs font-medium text-zinc-500 mt-0.5">Welcome</p>
-                </div>
+                <div class="w-10 h-10 rounded-full bg-zinc-900 flex items-center justify-center shadow-md"><img src="https://raw.githubusercontent.com/sunsetdansenja-arch/DBP-PROJECT-ASSETS/main/LOGO%20DI%20BAWAH%20POHON.png" class="h-6" style="filter: invert(1);"></div>
+                <div><h1 class="font-bold text-lg leading-none tracking-tight text-zinc-900">Executive Dashboard</h1><p id="mgt-greeting" class="text-xs font-medium text-zinc-500 mt-0.5">Welcome</p></div>
             </div>
-            
             <div class="flex items-center gap-4">
-                <select id="mgt-branch-filter" onchange="MANAGEMENT_LOGIC.loadData()" class="bg-white border border-zinc-200 text-sm font-semibold px-4 py-2 rounded-xl outline-none focus:border-zinc-400 apple-shadow hidden md:block">
-                    <option value="ALL">Semua Cabang</option>
-                    <option value="DI BAWAH POHON KEMANG">Kemang</option>
-                    <option value="DI BAWAH POHON BSD">BSD</option>
-                </select>
-
-                <button onclick="MANAGEMENT_LOGIC.loadData()" class="btn-press bg-white border border-zinc-200 text-zinc-700 p-2 rounded-xl shadow-sm hover:bg-zinc-50 transition-all">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
-                </button>
+                <select id="mgt-branch-filter" onchange="MANAGEMENT_LOGIC.loadData()" class="bg-white border border-zinc-200 text-sm font-semibold px-4 py-2 rounded-xl outline-none focus:border-zinc-400 apple-shadow hidden md:block"><option value="ALL">Semua Cabang</option><option value="DI BAWAH POHON KEMANG">Kemang</option><option value="DI BAWAH POHON BSD">BSD</option></select>
+                <button onclick="MANAGEMENT_LOGIC.loadData()" class="btn-press bg-white border border-zinc-200 text-zinc-700 p-2 rounded-xl shadow-sm hover:bg-zinc-50 transition-all"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg></button>
                 <button onclick="LOGIN_SYSTEM.logout()" class="btn-press bg-zinc-900 text-white font-semibold text-xs px-5 py-2.5 rounded-xl shadow-md hover:bg-zinc-800 transition-all">Logout</button>
             </div>
         </header>
-
         <main class="w-full max-w-6xl mx-auto p-6 space-y-6 animate-slide-up">
-            <div class="md:hidden">
-                <select id="mgt-branch-filter-mobile" onchange="MANAGEMENT_LOGIC.syncFilter(this.value)" class="w-full bg-white border border-zinc-200 text-sm font-semibold px-4 py-3 rounded-xl outline-none apple-shadow">
-                    <option value="ALL">Semua Cabang</option>
-                    <option value="DI BAWAH POHON KEMANG">Kemang</option>
-                    <option value="DI BAWAH POHON BSD">BSD</option>
-                </select>
-            </div>
-
+            <div class="md:hidden"><select id="mgt-branch-filter-mobile" onchange="MANAGEMENT_LOGIC.syncFilter(this.value)" class="w-full bg-white border border-zinc-200 text-sm font-semibold px-4 py-3 rounded-xl outline-none apple-shadow"><option value="ALL">Semua Cabang</option><option value="DI BAWAH POHON KEMANG">Kemang</option><option value="DI BAWAH POHON BSD">BSD</option></select></div>
             <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <div class="apple-card p-5 apple-shadow hover:shadow-lg transition-shadow">
-                    <div class="flex justify-between items-start mb-2"><p class="text-xs font-bold text-zinc-500 uppercase tracking-wider">Gross Revenue (Harian)</p><div class="p-1.5 bg-blue-50 text-blue-600 rounded-lg"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></div></div>
-                    <p id="mgt-gross" class="font-bold text-3xl text-zinc-900 tracking-tight">Rp 0</p>
-                </div>
-                <div class="apple-card p-5 apple-shadow hover:shadow-lg transition-shadow">
-                    <div class="flex justify-between items-start mb-2"><p class="text-xs font-bold text-zinc-500 uppercase tracking-wider">Komisi Capster (40%)</p><div class="p-1.5 bg-orange-50 text-orange-600 rounded-lg"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg></div></div>
-                    <p id="mgt-capster-share" class="font-bold text-2xl text-zinc-700 tracking-tight mt-1">Rp 0</p>
-                </div>
-                <div class="apple-card p-5 apple-shadow hover:shadow-lg transition-shadow">
-                    <div class="flex justify-between items-start mb-2"><p class="text-xs font-bold text-zinc-500 uppercase tracking-wider">Total Pengeluaran</p><div class="p-1.5 bg-red-50 text-red-600 rounded-lg"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6"></path></svg></div></div>
-                    <p id="mgt-expenses" class="font-bold text-2xl text-red-600 tracking-tight mt-1">Rp 0</p>
-                </div>
-                <div class="apple-card p-5 apple-shadow bg-zinc-900 border-none hover:shadow-xl transition-shadow text-white">
-                    <div class="flex justify-between items-start mb-2"><p class="text-xs font-bold text-zinc-400 uppercase tracking-wider">Net Profit (60% - Exp)</p><div class="p-1.5 bg-green-500/20 text-green-400 rounded-lg"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg></div></div>
-                    <p id="mgt-net-profit" class="font-bold text-3xl text-green-400 tracking-tight">Rp 0</p>
-                </div>
+                <div class="apple-card p-5 apple-shadow hover:shadow-lg transition-shadow"><div class="flex justify-between items-start mb-2"><p class="text-xs font-bold text-zinc-500 uppercase tracking-wider">Gross Revenue (Harian)</p><div class="p-1.5 bg-blue-50 text-blue-600 rounded-lg"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></div></div><p id="mgt-gross" class="font-bold text-3xl text-zinc-900 tracking-tight">Rp 0</p></div>
+                <div class="apple-card p-5 apple-shadow hover:shadow-lg transition-shadow"><div class="flex justify-between items-start mb-2"><p class="text-xs font-bold text-zinc-500 uppercase tracking-wider">Komisi Capster (40%)</p><div class="p-1.5 bg-orange-50 text-orange-600 rounded-lg"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg></div></div><p id="mgt-capster-share" class="font-bold text-2xl text-zinc-700 tracking-tight mt-1">Rp 0</p></div>
+                <div class="apple-card p-5 apple-shadow hover:shadow-lg transition-shadow"><div class="flex justify-between items-start mb-2"><p class="text-xs font-bold text-zinc-500 uppercase tracking-wider">Total Pengeluaran</p><div class="p-1.5 bg-red-50 text-red-600 rounded-lg"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6"></path></svg></div></div><p id="mgt-expenses" class="font-bold text-2xl text-red-600 tracking-tight mt-1">Rp 0</p></div>
+                <div class="apple-card p-5 apple-shadow bg-zinc-900 border-none hover:shadow-xl transition-shadow text-white"><div class="flex justify-between items-start mb-2"><p class="text-xs font-bold text-zinc-400 uppercase tracking-wider">Net Profit (60% - Exp)</p><div class="p-1.5 bg-green-500/20 text-green-400 rounded-lg"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg></div></div><p id="mgt-net-profit" class="font-bold text-3xl text-green-400 tracking-tight">Rp 0</p></div>
             </div>
-
             <div class="apple-card overflow-hidden apple-shadow mt-6">
-                <div class="p-5 border-b border-zinc-100 bg-zinc-50 flex justify-between items-center rounded-t-[24px]">
-                    <div><h2 class="font-bold text-xl tracking-tight text-zinc-900">Capster Leaderboard</h2><p class="text-[11px] font-medium text-zinc-500 mt-1">Peringkat kontribusi revenue hari ini</p></div>
-                </div>
-                <div class="p-0">
-                    <table class="w-full text-left">
-                        <thead class="bg-white border-b border-zinc-100">
-                            <tr><th class="py-4 px-6 text-xs font-bold text-zinc-400 uppercase tracking-wider w-16 text-center">Rank</th><th class="py-4 px-6 text-xs font-bold text-zinc-400 uppercase tracking-wider">Nama Barber</th><th class="py-4 px-6 text-xs font-bold text-zinc-400 uppercase tracking-wider text-right">Revenue Generated</th></tr>
-                        </thead>
-                        <tbody id="mgt-leaderboard" class="divide-y divide-zinc-100 bg-white"></tbody>
-                    </table>
-                </div>
+                <div class="p-5 border-b border-zinc-100 bg-zinc-50 flex justify-between items-center rounded-t-[24px]"><div><h2 class="font-bold text-xl tracking-tight text-zinc-900">Capster Leaderboard</h2><p class="text-[11px] font-medium text-zinc-500 mt-1">Peringkat kontribusi revenue hari ini</p></div></div>
+                <div class="p-0"><table class="w-full text-left"><thead class="bg-white border-b border-zinc-100"><tr><th class="py-4 px-6 text-xs font-bold text-zinc-400 uppercase tracking-wider w-16 text-center">Rank</th><th class="py-4 px-6 text-xs font-bold text-zinc-400 uppercase tracking-wider">Nama Barber</th><th class="py-4 px-6 text-xs font-bold text-zinc-400 uppercase tracking-wider text-right">Revenue Generated</th></tr></thead><tbody id="mgt-leaderboard" class="divide-y divide-zinc-100 bg-white"></tbody></table></div>
             </div>
         </main>
     </div>
@@ -252,65 +207,38 @@
         <div class="bg-white w-full max-w-sm rounded-[24px] p-6 shadow-2xl animate-slide-up border border-zinc-100">
             <h2 class="font-bold text-xl mb-6 text-zinc-900">Input Pengeluaran</h2>
             <div class="space-y-4">
-                <div>
-                    <label class="text-xs font-bold text-zinc-500 mb-1 block uppercase tracking-wider">Kategori</label>
-                    <select id="exp-kategori" class="w-full bg-zinc-50 text-zinc-900 font-semibold text-sm px-4 py-3 rounded-xl outline-none border border-zinc-200 focus:border-zinc-400"><option value="OPERASIONAL">Operasional</option><option value="KONSUMSI">Konsumsi</option><option value="MAINTENANCE">Maintenance</option><option value="LAINNYA">Lainnya</option></select>
-                </div>
-                <div>
-                    <label class="text-xs font-bold text-zinc-500 mb-1 block uppercase tracking-wider">Deskripsi Item</label>
-                    <input type="text" id="exp-deskripsi" placeholder="Contoh: Beli Silet" class="w-full bg-zinc-50 text-zinc-900 font-semibold text-sm px-4 py-3 rounded-xl outline-none border border-zinc-200 focus:border-zinc-400 placeholder-zinc-400">
-                </div>
-                <div>
-                    <label class="text-xs font-bold text-zinc-500 mb-1 block uppercase tracking-wider">Nominal (Rp)</label>
-                    <input type="number" id="exp-nominal" placeholder="0" class="w-full bg-zinc-50 text-zinc-900 font-bold text-xl px-4 py-3 rounded-xl outline-none border border-zinc-200 focus:border-zinc-400 placeholder-zinc-400">
-                </div>
-                <div class="flex gap-3 pt-4">
-                    <button onclick="CASHIER_LOGIC.closeExpenseModal()" class="btn-press flex-1 bg-zinc-100 text-zinc-600 py-3.5 rounded-xl font-bold text-sm hover:bg-zinc-200 transition-all">Batal</button>
-                    <button id="btn-submit-exp" onclick="CASHIER_LOGIC.submitExpense()" class="btn-press flex-1 bg-zinc-900 text-white py-3.5 rounded-xl font-bold text-sm shadow-md hover:bg-zinc-800 transition-all">Simpan</button>
-                </div>
+                <div><label class="text-xs font-bold text-zinc-500 mb-1 block uppercase tracking-wider">Kategori</label><select id="exp-kategori" class="w-full bg-zinc-50 text-zinc-900 font-semibold text-sm px-4 py-3 rounded-xl outline-none border border-zinc-200 focus:border-zinc-400"><option value="OPERASIONAL">Operasional</option><option value="KONSUMSI">Konsumsi</option><option value="MAINTENANCE">Maintenance</option><option value="LAINNYA">Lainnya</option></select></div>
+                <div><label class="text-xs font-bold text-zinc-500 mb-1 block uppercase tracking-wider">Deskripsi Item</label><input type="text" id="exp-deskripsi" placeholder="Contoh: Beli Silet" class="w-full bg-zinc-50 text-zinc-900 font-semibold text-sm px-4 py-3 rounded-xl outline-none border border-zinc-200 focus:border-zinc-400 placeholder-zinc-400"></div>
+                <div><label class="text-xs font-bold text-zinc-500 mb-1 block uppercase tracking-wider">Nominal (Rp)</label><input type="number" id="exp-nominal" placeholder="0" class="w-full bg-zinc-50 text-zinc-900 font-bold text-xl px-4 py-3 rounded-xl outline-none border border-zinc-200 focus:border-zinc-400 placeholder-zinc-400"></div>
+                <div class="flex gap-3 pt-4"><button onclick="CASHIER_LOGIC.closeExpenseModal()" class="btn-press flex-1 bg-zinc-100 text-zinc-600 py-3.5 rounded-xl font-bold text-sm hover:bg-zinc-200 transition-all">Batal</button><button id="btn-submit-exp" onclick="CASHIER_LOGIC.submitExpense()" class="btn-press flex-1 bg-zinc-900 text-white py-3.5 rounded-xl font-bold text-sm shadow-md hover:bg-zinc-800 transition-all">Simpan</button></div>
             </div>
         </div>
     </div>
 
     <div id="modal-cancel" class="fixed inset-0 z-50 bg-zinc-900/40 backdrop-blur-sm hidden flex-col items-center justify-center p-4 transition-all">
         <div class="bg-white w-full max-w-sm rounded-[24px] p-6 shadow-2xl animate-slide-up border border-red-100">
-            <div class="w-12 h-12 rounded-full bg-red-100 text-red-600 flex items-center justify-center mb-4">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
-            </div>
-            <h2 class="font-bold text-xl text-zinc-900 mb-2 tracking-tight">Batalkan Booking?</h2>
-            <p class="text-sm text-zinc-500 mb-6 leading-relaxed">Jadwal ini akan dihapus dari antrean. Ketik <span class="font-black text-red-600">YAKIN</span> untuk melanjutkan.</p>
+            <div class="w-12 h-12 rounded-full bg-red-100 text-red-600 flex items-center justify-center mb-4"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg></div>
+            <h2 class="font-bold text-xl text-zinc-900 mb-2 tracking-tight">Batalkan Booking?</h2><p class="text-sm text-zinc-500 mb-6 leading-relaxed">Jadwal ini akan dihapus dari antrean. Ketik <span class="font-black text-red-600">YAKIN</span> untuk melanjutkan.</p>
             <input type="text" id="cancel-confirm-text" placeholder="Ketik YAKIN" class="w-full bg-zinc-50 text-center text-red-600 font-black tracking-widest text-lg px-4 py-3 rounded-xl outline-none border border-red-200 focus:border-red-400 mb-4">
-            <div class="flex gap-3">
-                <button onclick="CASHIER_LOGIC.closeCancelModal()" class="btn-press flex-1 bg-zinc-100 text-zinc-600 py-3.5 rounded-xl font-bold text-sm hover:bg-zinc-200 transition-all">Kembali</button>
-                <button id="btn-submit-cancel" onclick="CASHIER_LOGIC.processCancel()" class="btn-press flex-1 bg-red-600 text-white py-3.5 rounded-xl font-bold text-sm shadow-md hover:bg-red-700 transition-all opacity-50 cursor-not-allowed" disabled>Batalkan</button>
-            </div>
+            <div class="flex gap-3"><button onclick="CASHIER_LOGIC.closeCancelModal()" class="btn-press flex-1 bg-zinc-100 text-zinc-600 py-3.5 rounded-xl font-bold text-sm hover:bg-zinc-200 transition-all">Kembali</button><button id="btn-submit-cancel" onclick="CASHIER_LOGIC.processCancel()" class="btn-press flex-1 bg-red-600 text-white py-3.5 rounded-xl font-bold text-sm shadow-md hover:bg-red-700 transition-all opacity-50 cursor-not-allowed" disabled>Batalkan</button></div>
         </div>
     </div>
 
-    <div id="loading-overlay" class="fixed inset-0 bg-white/80 backdrop-blur-sm hidden flex-col items-center justify-center z-[100] transition-all">
-        <div class="w-10 h-10 border-4 border-zinc-200 border-t-zinc-900 rounded-full animate-spin mb-4"></div>
-        <h2 id="loading-text" class="font-bold text-zinc-800 tracking-wide text-sm uppercase">Memproses...</h2>
-    </div>
+    <div id="loading-overlay" class="fixed inset-0 bg-white/80 backdrop-blur-sm hidden flex-col items-center justify-center z-[100] transition-all"><div class="w-10 h-10 border-4 border-zinc-200 border-t-zinc-900 rounded-full animate-spin mb-4"></div><h2 id="loading-text" class="font-bold text-zinc-800 tracking-wide text-sm uppercase">Memproses...</h2></div>
 
     <script>
         const CONFIG = { WEBHOOK_URL: 'https://n8n-mzbmiib3etk4.kangkung.sumopod.my.id/webhook/a6512d05-a51a-4289-9063-9a4f17ac745a' };
-        
-        // Kamus untuk Management (Bila ada data lama pakai ID)
         const CAPSTER_MAP = { "1": "Dila", "2": "Donovan", "3": "Hayeed" };
-
         const STATE = { user: null, cancelTargetId: null, syncInterval: null, rawReportData: null, sysDates: null };
 
         const UTIL = {
             formatRp: (num) => 'Rp ' + Number(num || 0).toLocaleString('id-ID'),
             cleanDate: (dateStr) => String(dateStr || "").substring(0, 10),
             formatDateId: (dateStr) => { if(!dateStr) return "-"; return new Date(dateStr).toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'short' }); },
-            
-            // Format WA Bulletproof Absolut (Anti Error)
             formatWA: (phone) => { 
                 if (!phone) return ""; 
                 let p = String(phone).replace(/\D/g, ''); 
                 if (p.startsWith('0')) return '62' + p.substring(1); 
-                if (p.startsWith('62')) return p; 
                 if (p.startsWith('8')) return '62' + p;
                 return p;
             },
@@ -319,7 +247,6 @@
             hideLoading: () => document.getElementById('loading-overlay').classList.replace('flex', 'hidden')
         };
 
-        // --- 1. LOGIN SYSTEM ---
         const LOGIN_SYSTEM = {
             pin: "",
             init() {
@@ -333,17 +260,11 @@
                 setTimeout(() => {
                     document.getElementById('view-login').classList.add('hidden');
                     if (STATE.user.role === 'CASHIER') {
-                        document.getElementById('view-cashier').classList.remove('hidden');
-                        document.getElementById('view-cashier').classList.add('flex');
-                        CASHIER_LOGIC.init();
+                        document.getElementById('view-cashier').classList.remove('hidden'); document.getElementById('view-cashier').classList.add('flex'); CASHIER_LOGIC.init();
                     } else if (STATE.user.role === 'MANAGEMENT' || STATE.user.role === 'BRANCH OWNER') {
-                        document.getElementById('view-management').classList.remove('hidden');
-                        document.getElementById('view-management').classList.add('flex');
-                        MANAGEMENT_LOGIC.init();
+                        document.getElementById('view-management').classList.remove('hidden'); document.getElementById('view-management').classList.add('flex'); MANAGEMENT_LOGIC.init();
                     } else {
-                        alert(`DASHBOARD ${STATE.user.role} SEDANG DIBANGUN.`);
-                        document.getElementById('view-login').style.opacity = '1';
-                        document.getElementById('view-login').classList.remove('hidden');
+                        alert(`DASHBOARD ${STATE.user.role} SEDANG DIBANGUN.`); document.getElementById('view-login').style.opacity = '1'; document.getElementById('view-login').classList.remove('hidden');
                     }
                 }, 400);
             },
@@ -365,37 +286,28 @@
                 try {
                     const res = await fetch(CONFIG.WEBHOOK_URL, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'login', username: u, password: this.pin }) });
                     const data = await res.json(); const ok = data.success || (data[0] && data[0].success);
-                    if (ok) { STATE.user = data.user || data[0].user; localStorage.setItem('dbp_user', JSON.stringify(STATE.user)); this.routeUser(); } 
-                    else throw new Error();
-                } catch (e) { this.triggerError("AKSES DITOLAK"); } 
-                finally { UTIL.hideLoading(); this.pin = ""; this.updateDots(); document.getElementById('userInput').value = ""; }
+                    if (ok) { STATE.user = data.user || data[0].user; localStorage.setItem('dbp_user', JSON.stringify(STATE.user)); this.routeUser(); } else throw new Error();
+                } catch (e) { this.triggerError("AKSES DITOLAK"); } finally { UTIL.hideLoading(); this.pin = ""; this.updateDots(); document.getElementById('userInput').value = ""; }
             },
-            triggerError(msg) {
-                this.pin = ""; this.updateDots();
-                document.getElementById('error-msg').innerText = msg; document.getElementById('error-msg').style.opacity = '1';
-            },
+            triggerError(msg) { this.pin = ""; this.updateDots(); document.getElementById('error-msg').innerText = msg; document.getElementById('error-msg').style.opacity = '1'; },
             logout() { localStorage.removeItem('dbp_user'); location.reload(); }
         };
 
-        // --- 2. CASHIER LOGIC (WHITE ELEGANT) ---
         const CASHIER_LOGIC = {
             init() {
                 document.getElementById('cashier-branch-name').innerText = STATE.user.branch; document.getElementById('report-branch-label').innerText = STATE.user.branch;
                 const now = new Date(); document.getElementById('report-month').value = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
                 this.loadData(); this.loadReportData(); STATE.syncInterval = setInterval(() => this.loadData(true), 120000);
-                
                 document.getElementById('cancel-confirm-text').addEventListener('input', function() {
                     const btn = document.getElementById('btn-submit-cancel');
-                    if(this.value === 'YAKIN') { btn.disabled = false; btn.classList.remove('opacity-50', 'cursor-not-allowed'); } 
-                    else { btn.disabled = true; btn.classList.add('opacity-50', 'cursor-not-allowed'); }
+                    if(this.value === 'YAKIN') { btn.disabled = false; btn.classList.remove('opacity-50', 'cursor-not-allowed'); } else { btn.disabled = true; btn.classList.add('opacity-50', 'cursor-not-allowed'); }
                 });
             },
             switchTab(tab) {
                 document.getElementById('tab-queue').classList.add('hidden'); document.getElementById('tab-report').classList.add('hidden');
                 document.getElementById('tab-btn-queue').className = "px-6 py-2 rounded-lg text-sm font-semibold text-zinc-500 hover:text-zinc-900 transition-all";
                 document.getElementById('tab-btn-report').className = "px-6 py-2 rounded-lg text-sm font-semibold text-zinc-500 hover:text-zinc-900 transition-all";
-                document.getElementById(`tab-${tab}`).classList.remove('hidden');
-                document.getElementById(`tab-btn-${tab}`).className = "px-6 py-2 rounded-lg text-sm font-bold bg-white shadow-sm text-zinc-900 transition-all";
+                document.getElementById(`tab-${tab}`).classList.remove('hidden'); document.getElementById(`tab-btn-${tab}`).className = "px-6 py-2 rounded-lg text-sm font-bold bg-white shadow-sm text-zinc-900 transition-all";
                 if(tab === 'report') this.processReport();
             },
             async loadData(silent = false) {
@@ -422,18 +334,13 @@
                 const byDate = { today: [], tomorrow: [], lusa: [] };
                 data.forEach(d => { const dt = UTIL.cleanDate(d.tanggal); if(dt === STATE.sysDates.today) byDate.today.push(d); else if(dt === STATE.sysDates.tomorrow) byDate.tomorrow.push(d); else if(dt === STATE.sysDates.lusa) byDate.lusa.push(d); });
 
-                const buildHtml = (title, items, isFuture, dateRaw) => {
+                const buildHtml = (title, items, isFuture) => {
                     if(items.length === 0) return ''; items.sort((a,b) => a.jam.localeCompare(b.jam));
                     let html = `<div class="mb-6"><h3 class="text-xs font-bold text-zinc-400 uppercase tracking-widest mb-3 pb-1 border-b border-zinc-200">${title}</h3><div class="space-y-3">`;
                     items.forEach(item => {
                         const isDone = item.status === 'DONE'; const isPending = item.status === 'PENDING';
                         const cName = item.caps_in_charge || item.capster_id || 'Barber'; const pName = item.package_name || item.package_id || 'Paket'; 
                         const waPhone = UTIL.formatWA(item.cust_phone);
-
-                        // Cek Logic Hari Ini untuk Teks WA (Aman dari miskomunikasi kasir)
-                        let dayText = "hari ini";
-                        if (dateRaw === STATE.sysDates.tomorrow) dayText = "besok";
-                        else if (dateRaw === STATE.sysDates.lusa) dayText = "lusa";
 
                         let sBadge = isDone ? `<span class="text-[9px] font-bold uppercase px-2 py-1 rounded bg-zinc-200 text-zinc-500">✓ Selesai</span>` : (isPending ? `<span class="text-[9px] font-bold uppercase px-2 py-1 rounded bg-zinc-100 text-zinc-500">Pending</span>` : `<span class="text-[9px] font-bold uppercase px-2 py-1 rounded bg-blue-100 text-blue-700">On Duty</span>`);
                         let aBtns = '';
@@ -442,27 +349,28 @@
                             const cBtn = `<button onclick="CASHIER_LOGIC.openCancelModal('${item.id}')" class="btn-press bg-white border border-red-200 text-red-600 px-3 py-2 rounded-lg text-[11px] font-bold hover:bg-red-50 transition-all">Cancel</button>`;
                             let waBtn = '';
                             if (isPending && waPhone) {
-                                const bName = UTIL.toTitleCase(STATE.user.branch || "").replace('Di Bawah Pohon', 'Di Bawah Pohon Barber & Shop');
-                                const wTxt = `Halo kak, kami dari ${bName} ingin mengkonfirmasi bookingan nya untuk ${dayText} di jam ${item.jam} dengan barber ${cName} apakah jadi datang kak?\n\nApabila ada pembatalan atau penjadwalan ulang, bisa kita bantu dengan membalas pesan ini.\n\nFYI, untuk keterlambatan kami bisa tunggu maksimal sampai 5 menit ya, kak 🙏🏻 Terima kasih sebelumnya`;
+                                // TEKS WA PERSIS SESUAI REQUEST (TETAP HARI INI)
+                                const bName = STATE.user.branch && STATE.user.branch.includes("BSD") ? "Di Bawah Pohon Barber & Shop BSD" : "Di Bawah Pohon Barber & Shop Kemang";
+                                const wTxt = `Halo kak, kami dari ${bName} ingin mengkonfirmasi bookingan nya untuk hari ini di jam ${item.jam} dengan barber ${cName} apakah jadi datang kak?\n\nApabila ada pembatalan atau penjadwalan ulang, bisa kita bantu dengan membalas pesan ini.\n\nFYI, untuk keterlambatan kami bisa tunggu maksimal sampai 5 menit ya, kak 🙏🏻 Terima kasih sebelumnya`;
                                 waBtn = `<a href="https://wa.me/${waPhone}?text=${encodeURIComponent(wTxt)}" target="_blank" class="btn-press bg-green-50 border border-green-200 text-green-600 px-3 py-2 rounded-lg text-[11px] font-bold hover:bg-green-100 flex items-center gap-1 transition-all">WA</a>`;
                             }
                             let pBtn = '';
-                            if(!isFuture) { pBtn = isPending ? `<button onclick="CASHIER_LOGIC.updateStatus('${item.id}', 'ON DUTY')" class="btn-press bg-blue-600 text-white px-4 py-2 rounded-lg text-[11px] font-bold shadow-sm hover:bg-blue-700 transition-all">Mulai</button>` : `<button onclick="CASHIER_LOGIC.updateStatus('${item.id}', 'DONE')" class="btn-press bg-zinc-900 text-white px-4 py-2 rounded-lg text-[11px] font-bold shadow-sm hover:bg-zinc-800 transition-all">Selesai</button>`; } 
-                            else { pBtn = `<span class="text-[10px] text-zinc-400 font-medium italic px-2">Locked</span>`; }
+                            if(!isFuture) { 
+                                pBtn = isPending ? `<button onclick="CASHIER_LOGIC.updateStatus('${item.id}', 'ON DUTY')" class="btn-press bg-blue-600 text-white px-4 py-2 rounded-lg text-[11px] font-bold shadow-sm hover:bg-blue-700 transition-all">Mulai</button>` : `<button onclick="CASHIER_LOGIC.updateStatus('${item.id}', 'DONE')" class="btn-press bg-zinc-900 text-white px-4 py-2 rounded-lg text-[11px] font-bold shadow-sm hover:bg-zinc-800 transition-all">Selesai</button>`; 
+                            } else { 
+                                // LOCKED BUTTON SEJAJAR
+                                pBtn = `<button disabled class="bg-transparent border border-transparent text-zinc-400 px-3 py-2 rounded-lg text-[11px] font-medium italic cursor-not-allowed">Locked</button>`; 
+                            }
                             aBtns = `<div class="flex items-center gap-2 mt-3 sm:mt-0">${waBtn}${cBtn}${pBtn}</div>`;
                         }
                         
                         html += `<div class="${isDone ? 'bg-zinc-50 border-zinc-100 opacity-60' : 'bg-white border-zinc-200 apple-shadow'} border rounded-[16px] p-4 flex flex-col sm:flex-row justify-between sm:items-center transition-all">
-                            <div>
-                                <div class="flex items-center gap-3 mb-1"><span class="text-base font-bold text-zinc-900">${item.jam}</span>${sBadge}</div>
-                                <h3 class="font-bold text-[15px] text-zinc-800 leading-none mb-1.5">${item.cust_name || 'Walk-In'}</h3>
-                                <p class="text-[11px] font-semibold text-zinc-500">Barber: <span class="text-zinc-800">${cName}</span> &bull; Paket: <span class="text-zinc-800">${pName}</span> &bull; ${UTIL.formatRp(item.price)}</p>
-                            </div>${aBtns}</div>`;
+                            <div><div class="flex items-center gap-3 mb-1"><span class="text-base font-bold text-zinc-900">${item.jam}</span>${sBadge}</div><h3 class="font-bold text-[15px] text-zinc-800 leading-none mb-1.5">${item.cust_name || 'Walk-In'}</h3><p class="text-[11px] font-semibold text-zinc-500">Barber: <span class="text-zinc-800">${cName}</span> &bull; Paket: <span class="text-zinc-800">${pName}</span> &bull; ${UTIL.formatRp(item.price)}</p></div>${aBtns}</div>`;
                     });
                     return html + `</div></div>`;
                 };
                 
-                let finalHtml = buildHtml("HARI INI", byDate.today, false, STATE.sysDates.today) + buildHtml(`BESOK (${UTIL.formatDateId(STATE.sysDates.tomorrow)})`, byDate.tomorrow, true, STATE.sysDates.tomorrow) + buildHtml(`LUSA (${UTIL.formatDateId(STATE.sysDates.lusa)})`, byDate.lusa, true, STATE.sysDates.lusa);
+                let finalHtml = buildHtml("HARI INI", byDate.today, false) + buildHtml(`BESOK (${UTIL.formatDateId(STATE.sysDates.tomorrow)})`, byDate.tomorrow, true) + buildHtml(`LUSA (${UTIL.formatDateId(STATE.sysDates.lusa)})`, byDate.lusa, true);
                 if(!finalHtml) finalHtml = `<div class="text-center py-10 text-zinc-400 font-bold text-sm">Belum ada antrean.</div>`;
                 container.insertAdjacentHTML('beforeend', finalHtml);
             },
@@ -471,7 +379,6 @@
                 if (data.length === 0) container.insertAdjacentHTML('beforeend', `<div class="text-center py-6 text-zinc-400 font-semibold text-xs">Belum ada pengeluaran.</div>`);
                 else data.forEach(item => { container.insertAdjacentHTML('beforeend', `<div class="bg-white border border-zinc-100 rounded-xl p-3.5 flex justify-between items-center shadow-sm"><div><p class="font-bold text-zinc-800 text-sm">${item.deskripsi}</p><p class="text-[10px] font-semibold text-zinc-400 uppercase mt-0.5">${item.kategori}</p></div><span class="font-bold text-red-500 text-sm">- ${UTIL.formatRp(item.nominal)}</span></div>`); });
             },
-            
             async updateStatus(id, newStatus) { UTIL.showLoading("Update..."); try { await fetch(CONFIG.WEBHOOK_URL, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'update_status', id: Number(id), status: newStatus }) }); await this.loadData(true); } catch (e) { alert("Gagal Update"); } finally { UTIL.hideLoading(); } },
             openCancelModal(id) { STATE.cancelTargetId = id; document.getElementById('cancel-confirm-text').value = ''; document.getElementById('btn-submit-cancel').disabled = true; document.getElementById('btn-submit-cancel').classList.add('opacity-50', 'cursor-not-allowed'); document.getElementById('modal-cancel').classList.replace('hidden', 'flex'); },
             closeCancelModal() { STATE.cancelTargetId = null; document.getElementById('modal-cancel').classList.replace('flex', 'hidden'); },
@@ -497,7 +404,7 @@
             exportPDF() { UTIL.showLoading("Cetak PDF..."); html2pdf().set({margin:0.5, filename:`DBP_${document.getElementById('report-month').value}.pdf`, html2canvas:{scale:2}, jsPDF:{unit:'in',format:'a4',orientation:'portrait'}}).from(document.getElementById('printable-report')).save().then(()=>UTIL.hideLoading()); }
         };
 
-        // --- 3. MANAGEMENT LOGIC (WHITE ELEGANT) ---
+        // --- 3. MANAGEMENT LOGIC ---
         const MANAGEMENT_LOGIC = {
             init() {
                 document.getElementById('mgt-greeting').innerText = `Welcome, ${UTIL.toTitleCase(STATE.user.staff_id)}`;
@@ -518,17 +425,13 @@
                     if (payload.success) { this.renderStats(payload.stats); this.renderLeaderboard(payload.leaderboard); }
                 } catch(e) {} finally { UTIL.hideLoading(); }
             },
-            renderStats(stats) {
-                document.getElementById('mgt-gross').innerText = UTIL.formatRp(stats.gross_revenue); document.getElementById('mgt-capster-share').innerText = UTIL.formatRp(stats.capster_share); document.getElementById('mgt-expenses').innerText = UTIL.formatRp(stats.total_expenses); document.getElementById('mgt-net-profit').innerText = UTIL.formatRp(stats.net_profit);
-            },
+            renderStats(stats) { document.getElementById('mgt-gross').innerText = UTIL.formatRp(stats.gross_revenue); document.getElementById('mgt-capster-share').innerText = UTIL.formatRp(stats.capster_share); document.getElementById('mgt-expenses').innerText = UTIL.formatRp(stats.total_expenses); document.getElementById('mgt-net-profit').innerText = UTIL.formatRp(stats.net_profit); },
             renderLeaderboard(lb) {
                 const tbody = document.getElementById('mgt-leaderboard');
                 if(!lb || lb.length === 0) { tbody.innerHTML = `<tr><td colspan="3" class="py-8 text-center text-zinc-400 font-medium text-sm">Belum ada transaksi hari ini.</td></tr>`; return; }
                 tbody.innerHTML = lb.map((capster, index) => {
                     const rank = index + 1; let rankHtml = `<span class="font-bold text-zinc-500">${rank}</span>`;
-                    if(rank === 1) rankHtml = `<span class="bg-orange-100 text-orange-600 font-bold px-2 py-1 rounded-full text-xs">🥇 1</span>`;
-                    else if(rank === 2) rankHtml = `<span class="bg-zinc-100 text-zinc-600 font-bold px-2 py-1 rounded-full text-xs">🥈 2</span>`;
-                    else if(rank === 3) rankHtml = `<span class="bg-orange-50 text-orange-800 font-bold px-2 py-1 rounded-full text-xs">🥉 3</span>`;
+                    if(rank === 1) rankHtml = `<span class="bg-orange-100 text-orange-600 font-bold px-2 py-1 rounded-full text-xs">🥇 1</span>`; else if(rank === 2) rankHtml = `<span class="bg-zinc-100 text-zinc-600 font-bold px-2 py-1 rounded-full text-xs">🥈 2</span>`; else if(rank === 3) rankHtml = `<span class="bg-orange-50 text-orange-800 font-bold px-2 py-1 rounded-full text-xs">🥉 3</span>`;
                     const capsterName = CAPSTER_MAP[capster.capster_id] || capster.capster_id;
                     return `<tr class="hover:bg-zinc-50 transition-colors"><td class="py-4 px-6 text-center">${rankHtml}</td><td class="py-4 px-6 font-bold text-zinc-800">${UTIL.toTitleCase(capsterName)}</td><td class="py-4 px-6 font-bold text-blue-600 text-right">${UTIL.formatRp(capster.revenue)}</td></tr>`;
                 }).join('');
