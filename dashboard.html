@@ -35,17 +35,10 @@
 
         <div class="w-full bg-zinc-900 brutal-border rounded-3xl p-6 mb-8 text-center brutal-shadow">
             
-            <select id="userSelect" class="w-full bg-zinc-800 text-white font-black uppercase text-sm px-4 py-3 rounded-xl outline-none appearance-none text-center mb-6 brutal-border focus:brutal-border-active transition-all cursor-pointer">
-                <option value="" disabled selected>-- Pilih ID Akses --</option>
-                <option value="DONOVAN">DONOVAN (Capster)</option>
-                <option value="HAYEED">HAYEED (Capster)</option>
-                <option value="SULLY">SULLY (Capster)</option>
-                <option value="MAX">MAX (Capster)</option>
-                <option value="SUMMER">SUMMER (Cashier)</option>
-                <option value="USMAN">USMAN (Branch Owner)</option>
-                <option value="PRIASOLO">PRIA SOLO (Management)</option>
-            </select>
+            <input type="text" id="userInput" placeholder="MASUKKAN STAFF ID" autocomplete="off" autocorrect="off" autocapitalize="characters" spellcheck="false"
+                class="w-full bg-zinc-800 text-white font-black uppercase text-lg px-4 py-4 rounded-xl outline-none text-center mb-6 brutal-border focus:brutal-border-active transition-all placeholder-zinc-500">
 
+            <p class="text-[10px] font-black text-zinc-500 mb-3 uppercase tracking-widest">Masukkan PIN Anda</p>
             <div id="pin-dots" class="flex justify-center gap-4">
                 <div class="w-4 h-4 rounded-full border-2 border-zinc-500 transition-all" id="dot-1"></div>
                 <div class="w-4 h-4 rounded-full border-2 border-zinc-500 transition-all" id="dot-2"></div>
@@ -63,7 +56,8 @@
             </script>
             <button onclick="LOGIN_SYSTEM.press('clear')" class="numpad-btn bg-zinc-800 brutal-border rounded-2xl h-16 text-xs font-black uppercase text-zinc-500 tracking-widest transition-all">Del</button>
             <button onclick="LOGIN_SYSTEM.press('0')" class="numpad-btn bg-zinc-800 brutal-border rounded-2xl h-16 text-2xl font-black transition-all">0</button>
-            <button disabled class="bg-transparent h-16"></button> </div>
+            <button disabled class="bg-transparent h-16"></button>
+        </div>
 
     </div>
 
@@ -73,9 +67,9 @@
     </div>
 
     <script>
-        // GANTI INI DENGAN URL WEBHOOK N8N PINTU 2 LO!
+        // URL WEBHOOK PRODUCTION N8N LO UDAH TERPASANG DI SINI
         const CONFIG = {
-            WEBHOOK_URL: 'https://n8n-mzbmiib3etk4.kangkung.sumopod.my.id/webhook/dbp-private' 
+            WEBHOOK_URL: 'https://n8n-mzbmiib3etk4.kangkung.sumopod.my.id/webhook/a6512d05-a51a-4289-9063-9a4f17ac745a' 
         };
 
         const LOGIN_SYSTEM = {
@@ -93,7 +87,7 @@
                 
                 this.updateDots();
 
-                // Kalau udah 4 digit, langsung sikat ke n8n
+                // Kalau udah 4 digit, sikat validasi
                 if (this.pin.length === 4) {
                     setTimeout(() => this.submit(), 200);
                 }
@@ -113,11 +107,15 @@
             },
 
             async submit() {
-                const username = document.getElementById('userSelect').value;
+                // Ambil text dari input dan paksa jadi HURUF BESAR
+                const rawInput = document.getElementById('userInput').value;
+                const username = rawInput.trim().toUpperCase(); 
+                
                 const errorMsg = document.getElementById('error-msg');
 
+                // Cegah kirim kalau STAFF ID kosong
                 if (!username) {
-                    errorMsg.innerText = "PILIH ID AKSES DULU";
+                    errorMsg.innerText = "ISI STAFF ID DULU BOS";
                     errorMsg.style.opacity = '1';
                     this.triggerError();
                     return;
@@ -132,23 +130,31 @@
                         headers: {'Content-Type': 'application/json'},
                         body: JSON.stringify({
                             action: 'login',
-                            username: username,
+                            username: username, // Sengaja pake key 'username' biar logic n8n lo ttp jalan normal
                             password: this.pin
                         })
                     });
                     
                     const data = await res.json();
                     
-                    if (data.success || (data[0] && data[0].success)) {
-                        // Kalau sukses, simpan data ke LocalStorage biar tau siapa yang lagi login
+                    // N8n kadang ngembaliin array, kadang object langsung. Kita tangkap dua-duanya.
+                    const isSuccess = data.success || (Array.isArray(data) && data[0] && data[0].success);
+                    
+                    if (isSuccess) {
                         const userData = data.user || data[0].user;
                         localStorage.setItem('dbp_user', JSON.stringify(userData));
                         
-                        alert(`Welcome ${userData.role}: ${username}`);
-                        // NANTI KITA ARAHIN KE DASHBOARD MASING-MASING DI SINI
+                        alert(`🔥 AKSES DIBERIKAN!\nSelamat Datang ${userData.role}: ${username}`);
+                        
+                        // KOSONGIN FORM SETELAH SUKSES
+                        document.getElementById('userInput').value = "";
+                        this.pin = "";
+                        this.updateDots();
+                        
+                        // TODO: ARAHKAN KE DASHBOARD BERDASARKAN ROLE
                         
                     } else {
-                        throw new Error("Invalid PIN");
+                        throw new Error("Invalid Auth");
                     }
                 } catch (e) {
                     this.triggerError();
@@ -168,6 +174,11 @@
                 setTimeout(() => container.classList.remove('animate-shake'), 400);
             }
         };
+
+        // Bikin input text otomatis jadi huruf besar saat user ngetik
+        document.getElementById('userInput').addEventListener('input', function(e) {
+            this.value = this.value.toUpperCase();
+        });
     </script>
 </body>
 </html>
