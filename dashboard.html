@@ -13,7 +13,6 @@
     <style>
         body { font-family: 'Inter', sans-serif; background-color: #F5F5F7; color: #1D1D1F; -webkit-tap-highlight-color: transparent; overflow-x: hidden; }
         
-        /* Apple Elegant Styles untuk SEMUA ROLE */
         .apple-shadow { box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04); }
         .apple-shadow-lg { box-shadow: 0 12px 48px rgba(0, 0, 0, 0.08); }
         .apple-card { background: #FFFFFF; border: 1px solid #E5E5EA; border-radius: 20px; }
@@ -296,7 +295,7 @@
     <script>
         const CONFIG = { WEBHOOK_URL: 'https://n8n-mzbmiib3etk4.kangkung.sumopod.my.id/webhook/a6512d05-a51a-4289-9063-9a4f17ac745a' };
         
-        // KAMUS SEMENTARA UNTUK LEADERBOARD (Kalau data lama backend masih kirim ID 1, 2, 3)
+        // Kamus untuk Management (Bila ada data lama pakai ID)
         const CAPSTER_MAP = { "1": "Dila", "2": "Donovan", "3": "Hayeed" };
 
         const STATE = { user: null, cancelTargetId: null, syncInterval: null, rawReportData: null, sysDates: null };
@@ -305,7 +304,16 @@
             formatRp: (num) => 'Rp ' + Number(num || 0).toLocaleString('id-ID'),
             cleanDate: (dateStr) => String(dateStr || "").substring(0, 10),
             formatDateId: (dateStr) => { if(!dateStr) return "-"; return new Date(dateStr).toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'short' }); },
-            formatWA: (phone) => { if (!phone) return ""; let p = String(phone).replace(/\D/g, ''); if (p.startsWith('0')) p = '62' + p.substring(1); return p; },
+            
+            // Format WA Bulletproof Absolut (Anti Error)
+            formatWA: (phone) => { 
+                if (!phone) return ""; 
+                let p = String(phone).replace(/\D/g, ''); 
+                if (p.startsWith('0')) return '62' + p.substring(1); 
+                if (p.startsWith('62')) return p; 
+                if (p.startsWith('8')) return '62' + p;
+                return p;
+            },
             toTitleCase: (str) => str.replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()),
             showLoading: (t) => { document.getElementById('loading-text').innerText = t || "MEMPROSES..."; document.getElementById('loading-overlay').classList.replace('hidden', 'flex'); },
             hideLoading: () => document.getElementById('loading-overlay').classList.replace('flex', 'hidden')
@@ -414,12 +422,19 @@
                 const byDate = { today: [], tomorrow: [], lusa: [] };
                 data.forEach(d => { const dt = UTIL.cleanDate(d.tanggal); if(dt === STATE.sysDates.today) byDate.today.push(d); else if(dt === STATE.sysDates.tomorrow) byDate.tomorrow.push(d); else if(dt === STATE.sysDates.lusa) byDate.lusa.push(d); });
 
-                const buildHtml = (title, items, isFuture) => {
+                const buildHtml = (title, items, isFuture, dateRaw) => {
                     if(items.length === 0) return ''; items.sort((a,b) => a.jam.localeCompare(b.jam));
                     let html = `<div class="mb-6"><h3 class="text-xs font-bold text-zinc-400 uppercase tracking-widest mb-3 pb-1 border-b border-zinc-200">${title}</h3><div class="space-y-3">`;
                     items.forEach(item => {
                         const isDone = item.status === 'DONE'; const isPending = item.status === 'PENDING';
-                        const cName = item.caps_in_charge || item.capster_id || 'Barber'; const pName = item.package_name || item.package_id || 'Paket'; const waPhone = UTIL.formatWA(item.cust_phone);
+                        const cName = item.caps_in_charge || item.capster_id || 'Barber'; const pName = item.package_name || item.package_id || 'Paket'; 
+                        const waPhone = UTIL.formatWA(item.cust_phone);
+
+                        // Cek Logic Hari Ini untuk Teks WA (Aman dari miskomunikasi kasir)
+                        let dayText = "hari ini";
+                        if (dateRaw === STATE.sysDates.tomorrow) dayText = "besok";
+                        else if (dateRaw === STATE.sysDates.lusa) dayText = "lusa";
+
                         let sBadge = isDone ? `<span class="text-[9px] font-bold uppercase px-2 py-1 rounded bg-zinc-200 text-zinc-500">✓ Selesai</span>` : (isPending ? `<span class="text-[9px] font-bold uppercase px-2 py-1 rounded bg-zinc-100 text-zinc-500">Pending</span>` : `<span class="text-[9px] font-bold uppercase px-2 py-1 rounded bg-blue-100 text-blue-700">On Duty</span>`);
                         let aBtns = '';
                         
@@ -428,12 +443,12 @@
                             let waBtn = '';
                             if (isPending && waPhone) {
                                 const bName = UTIL.toTitleCase(STATE.user.branch || "").replace('Di Bawah Pohon', 'Di Bawah Pohon Barber & Shop');
-                                const wTxt = `Halo kak, kami dari ${bName} ingin mengkonfirmasi bookingan nya untuk hari ini di jam ${item.jam} dengan barber ${cName} apakah jadi datang kak?\n\nApabila ada pembatalan atau penjadwalan ulang, bisa kita bantu dengan membalas pesan ini.\n\nFYI, untuk keterlambatan kami bisa tunggu maksimal sampai 5 menit ya, kak 🙏🏻 Terima kasih sebelumnya`;
+                                const wTxt = `Halo kak, kami dari ${bName} ingin mengkonfirmasi bookingan nya untuk ${dayText} di jam ${item.jam} dengan barber ${cName} apakah jadi datang kak?\n\nApabila ada pembatalan atau penjadwalan ulang, bisa kita bantu dengan membalas pesan ini.\n\nFYI, untuk keterlambatan kami bisa tunggu maksimal sampai 5 menit ya, kak 🙏🏻 Terima kasih sebelumnya`;
                                 waBtn = `<a href="https://wa.me/${waPhone}?text=${encodeURIComponent(wTxt)}" target="_blank" class="btn-press bg-green-50 border border-green-200 text-green-600 px-3 py-2 rounded-lg text-[11px] font-bold hover:bg-green-100 flex items-center gap-1 transition-all">WA</a>`;
                             }
                             let pBtn = '';
                             if(!isFuture) { pBtn = isPending ? `<button onclick="CASHIER_LOGIC.updateStatus('${item.id}', 'ON DUTY')" class="btn-press bg-blue-600 text-white px-4 py-2 rounded-lg text-[11px] font-bold shadow-sm hover:bg-blue-700 transition-all">Mulai</button>` : `<button onclick="CASHIER_LOGIC.updateStatus('${item.id}', 'DONE')" class="btn-press bg-zinc-900 text-white px-4 py-2 rounded-lg text-[11px] font-bold shadow-sm hover:bg-zinc-800 transition-all">Selesai</button>`; } 
-                            else { pBtn = `<span class="text-[10px] text-zinc-400 font-medium italic mt-2">Locked</span>`; }
+                            else { pBtn = `<span class="text-[10px] text-zinc-400 font-medium italic px-2">Locked</span>`; }
                             aBtns = `<div class="flex items-center gap-2 mt-3 sm:mt-0">${waBtn}${cBtn}${pBtn}</div>`;
                         }
                         
@@ -446,7 +461,8 @@
                     });
                     return html + `</div></div>`;
                 };
-                let finalHtml = buildHtml("HARI INI", byDate.today, false) + buildHtml(`BESOK (${UTIL.formatDateId(STATE.sysDates.tomorrow)})`, byDate.tomorrow, true) + buildHtml(`LUSA (${UTIL.formatDateId(STATE.sysDates.lusa)})`, byDate.lusa, true);
+                
+                let finalHtml = buildHtml("HARI INI", byDate.today, false, STATE.sysDates.today) + buildHtml(`BESOK (${UTIL.formatDateId(STATE.sysDates.tomorrow)})`, byDate.tomorrow, true, STATE.sysDates.tomorrow) + buildHtml(`LUSA (${UTIL.formatDateId(STATE.sysDates.lusa)})`, byDate.lusa, true, STATE.sysDates.lusa);
                 if(!finalHtml) finalHtml = `<div class="text-center py-10 text-zinc-400 font-bold text-sm">Belum ada antrean.</div>`;
                 container.insertAdjacentHTML('beforeend', finalHtml);
             },
