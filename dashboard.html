@@ -8,25 +8,18 @@
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
     <style>
         body { font-family: 'Inter', sans-serif; background-color: #F5F5F7; color: #1D1D1F; -webkit-tap-highlight-color: transparent; overflow-x: hidden; }
-        
-        /* Apple Elegant Styles */
         .apple-shadow { box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04); }
         .apple-card { background: #FFFFFF; border: 1px solid #E5E5EA; border-radius: 20px; }
         .glass-header { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); border-bottom: 1px solid #E5E5EA; }
         .btn-press:active { transform: scale(0.97); }
-        
-        /* Scrollbar Halus */
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #D1D1D6; border-radius: 10px; }
         ::-webkit-scrollbar-thumb:hover { background: #999999; }
-
-        /* Animations */
         @keyframes slideUp { 0% { opacity: 0; transform: translateY(20px); } 100% { opacity: 1; transform: translateY(0); } }
         .animate-slide-up { animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
         @keyframes pulse-dot { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
@@ -37,30 +30,21 @@
 
     <div id="view-login" class="h-full w-full flex flex-col items-center justify-center px-6 absolute inset-0 z-40 bg-white transition-all duration-700">
         <div class="w-full max-w-sm flex flex-col items-center animate-slide-up">
-            <img src="https://raw.githubusercontent.com/sunsetdansenja-arch/DBP-PROJECT-ASSETS/main/LOGO%20DI%20BAWAH%20POHON.png" class="h-16 w-auto mb-6 opacity-90" alt="Logo DBP" style="filter: invert(1);">
-            <h1 class="font-bold text-2xl tracking-tight mb-1 text-zinc-900">System Access</h1>
+            <img src="https://raw.githubusercontent.com/sunsetdansenja-arch/DBP-PROJECT-ASSETS/main/LOGO%20DI%20BAWAH%20POHON.png" class="h-16 w-auto mb-6 opacity-90" style="filter: invert(1);">
+            <h1 class="font-bold text-2xl tracking-tight mb-1">System Access</h1>
             <p class="text-xs font-medium text-zinc-400 uppercase tracking-widest mb-8">Authorized Personnel Only</p>
-
             <div class="w-full apple-card apple-shadow p-6 mb-8 text-center">
-                <input type="text" id="userInput" placeholder="STAFF ID" autocomplete="off" autocorrect="off" autocapitalize="characters" spellcheck="false"
-                    class="w-full bg-zinc-50 text-zinc-900 font-bold uppercase text-center text-lg px-4 py-4 rounded-2xl outline-none border border-zinc-200 focus:border-zinc-400 focus:bg-white transition-all mb-6 placeholder-zinc-400">
-
+                <input type="text" id="userInput" placeholder="STAFF ID" autocomplete="off" class="w-full bg-zinc-50 text-zinc-900 font-bold uppercase text-center text-lg px-4 py-4 rounded-2xl outline-none border border-zinc-200 focus:border-zinc-400 transition-all mb-6">
                 <p class="text-[10px] font-bold text-zinc-400 mb-3 uppercase tracking-widest">PIN CODE</p>
                 <div id="pin-dots" class="flex justify-center gap-4">
-                    <div class="w-3 h-3 rounded-full bg-zinc-200 transition-all" id="dot-1"></div>
-                    <div class="w-3 h-3 rounded-full bg-zinc-200 transition-all" id="dot-2"></div>
-                    <div class="w-3 h-3 rounded-full bg-zinc-200 transition-all" id="dot-3"></div>
-                    <div class="w-3 h-3 rounded-full bg-zinc-200 transition-all" id="dot-4"></div>
+                    <div class="w-3 h-3 rounded-full bg-zinc-200" id="dot-1"></div><div class="w-3 h-3 rounded-full bg-zinc-200" id="dot-2"></div><div class="w-3 h-3 rounded-full bg-zinc-200" id="dot-3"></div><div class="w-3 h-3 rounded-full bg-zinc-200" id="dot-4"></div>
                 </div>
                 <p id="error-msg" class="text-red-500 font-bold text-xs mt-4 opacity-0 transition-opacity">Akses Ditolak</p>
             </div>
-
             <div class="grid grid-cols-3 gap-3 w-full px-4">
-                <script>
-                    for(let i=1; i<=9; i++) document.write(`<button onclick="LOGIN_SYSTEM.press('${i}')" class="btn-press bg-white border border-zinc-200 rounded-2xl h-14 text-xl font-medium text-zinc-700 shadow-sm transition-all hover:bg-zinc-50">${i}</button>`);
-                </script>
-                <button onclick="LOGIN_SYSTEM.press('clear')" class="btn-press bg-white border border-zinc-200 rounded-2xl h-14 text-xs font-bold uppercase text-zinc-400 shadow-sm transition-all hover:bg-zinc-50">Del</button>
-                <button onclick="LOGIN_SYSTEM.press('0')" class="btn-press bg-white border border-zinc-200 rounded-2xl h-14 text-xl font-medium text-zinc-700 shadow-sm transition-all hover:bg-zinc-50">0</button>
+                <script>for(let i=1; i<=9; i++) document.write(`<button onclick="LOGIN_SYSTEM.press('${i}')" class="btn-press bg-white border border-zinc-200 rounded-2xl h-14 text-xl font-medium shadow-sm hover:bg-zinc-50">${i}</button>`);</script>
+                <button onclick="LOGIN_SYSTEM.press('clear')" class="btn-press bg-white border border-zinc-200 rounded-2xl h-14 text-xs font-bold uppercase text-zinc-400 shadow-sm hover:bg-zinc-50">Del</button>
+                <button onclick="LOGIN_SYSTEM.press('0')" class="btn-press bg-white border border-zinc-200 rounded-2xl h-14 text-xl font-medium shadow-sm hover:bg-zinc-50">0</button>
             </div>
         </div>
     </div>
@@ -70,40 +54,49 @@
             <div class="flex items-center gap-4">
                 <img src="https://raw.githubusercontent.com/sunsetdansenja-arch/DBP-PROJECT-ASSETS/main/LOGO%20DI%20BAWAH%20POHON.png" class="h-10 opacity-90" style="filter: invert(1);">
                 <div>
-                    <h1 class="font-bold tracking-tight text-lg leading-none text-zinc-900">Cashier Terminal</h1>
+                    <h1 class="font-bold tracking-tight text-lg leading-none">Cashier Terminal</h1>
                     <p id="cashier-branch-name" class="text-[11px] font-semibold text-zinc-500 uppercase tracking-wide mt-1">LOADING...</p>
                 </div>
             </div>
-
             <div class="hidden md:flex bg-zinc-100 p-1 rounded-xl border border-zinc-200">
-                <button onclick="CASHIER_LOGIC.switchTab('queue')" id="tab-btn-queue" class="px-6 py-2 rounded-lg text-sm font-bold bg-white shadow-sm text-zinc-900 transition-all">Live Queue</button>
+                <button onclick="CASHIER_LOGIC.switchTab('queue')" id="tab-btn-queue" class="px-6 py-2 rounded-lg text-sm font-bold bg-white shadow-sm transition-all">Live Queue</button>
                 <button onclick="CASHIER_LOGIC.switchTab('report')" id="tab-btn-report" class="px-6 py-2 rounded-lg text-sm font-semibold text-zinc-500 hover:text-zinc-900 transition-all">Reports</button>
             </div>
-
             <div class="flex gap-4 items-center">
                 <div class="flex items-center gap-2 text-[10px] font-bold text-zinc-400 uppercase tracking-widest">
-                    <div id="sync-indicator" class="w-2 h-2 rounded-full bg-green-500 animate-pulse-dot"></div>
-                    <span id="sync-text">Auto-Sync On</span>
+                    <div id="sync-indicator" class="w-2 h-2 rounded-full bg-green-500 animate-pulse-dot"></div><span id="sync-text">Auto-Sync On</span>
                 </div>
-                <button onclick="CASHIER_LOGIC.loadData()" class="btn-press bg-white border border-zinc-200 text-zinc-700 p-2 rounded-xl shadow-sm hover:bg-zinc-50">
+                <button onclick="CASHIER_LOGIC.loadData()" class="btn-press bg-white border border-zinc-200 p-2 rounded-xl shadow-sm hover:bg-zinc-50">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
                 </button>
-                <button onclick="LOGIN_SYSTEM.logout()" class="btn-press bg-zinc-900 text-white font-semibold text-xs px-4 py-2 rounded-xl shadow-md hover:bg-zinc-800 transition-all">Logout</button>
+                <button onclick="LOGIN_SYSTEM.logout()" class="btn-press bg-zinc-900 text-white font-semibold text-xs px-4 py-2 rounded-xl shadow-md hover:bg-zinc-800">Logout</button>
             </div>
         </header>
 
         <main id="tab-queue" class="flex-1 overflow-hidden flex flex-col lg:flex-row p-4 gap-4 animate-slide-up">
-            <section class="flex-1 apple-card apple-shadow flex flex-col overflow-hidden">
-                <div class="p-5 border-b border-zinc-100 flex justify-between items-center bg-white rounded-t-[20px]">
-                    <h2 class="font-bold text-xl tracking-tight text-zinc-800">Antrean Hari Ini</h2>
-                    <div class="bg-zinc-100 text-zinc-600 px-3 py-1.5 rounded-lg text-xs font-bold border border-zinc-200">
-                        <span id="queue-count">0</span> PENDING
+            <section class="flex-1 flex flex-col overflow-hidden gap-4">
+                
+                <div class="grid grid-cols-3 gap-3 shrink-0">
+                    <div class="apple-card p-4 bg-white apple-shadow">
+                        <p class="text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1">Total Omset (Hari Ini)</p>
+                        <p id="sum-omset" class="font-bold text-xl text-blue-600">Rp 0</p>
+                    </div>
+                    <div class="apple-card p-4 bg-white apple-shadow">
+                        <p class="text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1">Pengeluaran (Hari Ini)</p>
+                        <p id="sum-expense" class="font-bold text-xl text-red-600">Rp 0</p>
+                    </div>
+                    <div class="apple-card p-4 bg-zinc-900 text-white apple-shadow border-none">
+                        <p class="text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1">Gross Profit (Hari Ini)</p>
+                        <p id="sum-profit" class="font-bold text-xl text-green-400">Rp 0</p>
                     </div>
                 </div>
-                <div id="queue-container" class="flex-1 overflow-y-auto p-5 space-y-4 bg-zinc-50/50">
-                    <div id="queue-loading" class="w-full bg-white border border-zinc-100 rounded-2xl p-6 animate-pulse flex justify-between items-center">
-                        <div class="space-y-3 w-1/2"><div class="h-5 bg-zinc-200 rounded w-3/4"></div><div class="h-3 bg-zinc-100 rounded w-1/2"></div></div>
-                        <div class="h-10 bg-zinc-200 rounded-xl w-1/4"></div>
+
+                <div class="flex-1 apple-card apple-shadow flex flex-col overflow-hidden">
+                    <div class="p-4 border-b border-zinc-100 bg-white rounded-t-[20px]">
+                        <h2 class="font-bold text-lg tracking-tight text-zinc-800">Antrean (3 Hari Ke Depan)</h2>
+                    </div>
+                    <div id="queue-container" class="flex-1 overflow-y-auto p-4 space-y-6 bg-zinc-50/50">
+                        <div id="queue-loading" class="w-full bg-white border border-zinc-100 rounded-2xl p-6 animate-pulse flex justify-between items-center"><div class="space-y-3 w-1/2"><div class="h-5 bg-zinc-200 rounded w-3/4"></div><div class="h-3 bg-zinc-100 rounded w-1/2"></div></div></div>
                     </div>
                 </div>
             </section>
@@ -113,7 +106,6 @@
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
                     Catat Pengeluaran
                 </button>
-
                 <div class="flex-1 apple-card apple-shadow flex flex-col overflow-hidden">
                     <div class="p-5 border-b border-zinc-100 bg-white rounded-t-[20px]">
                         <h2 class="font-bold text-lg tracking-tight text-zinc-800">Petty Cash</h2>
@@ -122,71 +114,38 @@
                     <div id="expense-container" class="flex-1 overflow-y-auto p-4 space-y-3 bg-zinc-50/50">
                         <div id="expense-loading" class="w-full bg-white border border-zinc-100 rounded-xl p-4 animate-pulse h-16"></div>
                     </div>
-                    <div class="p-5 border-t border-zinc-100 bg-white rounded-b-[20px] flex justify-between items-center">
-                        <span class="text-xs font-bold text-zinc-400 uppercase tracking-wider">Total Keluar</span>
-                        <span id="expense-total" class="font-bold text-lg text-zinc-900">Rp 0</span>
-                    </div>
                 </div>
             </section>
         </main>
 
         <main id="tab-report" class="flex-1 overflow-hidden flex flex-col p-4 md:p-8 hidden animate-slide-up">
             <div class="max-w-5xl w-full mx-auto flex flex-col h-full gap-6">
-                
-                <div class="flex flex-col sm:flex-row justify-between items-end gap-4 bg-white p-5 rounded-2xl apple-shadow border border-zinc-200">
+                <div class="flex justify-between items-end gap-4 bg-white p-5 rounded-2xl apple-shadow border border-zinc-200">
                     <div>
-                        <label class="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-2 block">Pilih Bulan Laporan</label>
-                        <input type="month" id="report-month" onchange="CASHIER_LOGIC.processReport()" class="bg-zinc-50 border border-zinc-200 text-zinc-800 font-semibold px-4 py-2 rounded-xl outline-none focus:border-zinc-400">
+                        <label class="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-2 block">Bulan Laporan</label>
+                        <input type="month" id="report-month" onchange="CASHIER_LOGIC.processReport()" class="bg-zinc-50 border border-zinc-200 text-zinc-800 font-semibold px-4 py-2 rounded-xl outline-none">
                     </div>
                     <div class="flex gap-2">
-                        <button onclick="CASHIER_LOGIC.exportCSV()" class="btn-press bg-green-50 text-green-700 border border-green-200 px-4 py-2.5 rounded-xl text-sm font-bold flex items-center gap-2 hover:bg-green-100">
-                            Unduh CSV
-                        </button>
-                        <button onclick="CASHIER_LOGIC.exportPDF()" class="btn-press bg-zinc-900 text-white px-4 py-2.5 rounded-xl text-sm font-bold flex items-center gap-2 shadow-md hover:bg-zinc-800">
-                            Cetak PDF
-                        </button>
+                        <button onclick="CASHIER_LOGIC.exportCSV()" class="btn-press bg-green-50 text-green-700 px-4 py-2.5 rounded-xl text-sm font-bold flex items-center gap-2">Unduh CSV</button>
+                        <button onclick="CASHIER_LOGIC.exportPDF()" class="btn-press bg-zinc-900 text-white px-4 py-2.5 rounded-xl text-sm font-bold shadow-md">Cetak PDF</button>
                     </div>
                 </div>
-
                 <div id="printable-report" class="flex-1 flex flex-col overflow-hidden bg-white rounded-2xl apple-shadow border border-zinc-200">
-                    <div class="p-6 border-b border-zinc-100 flex justify-between items-center bg-zinc-50 rounded-t-[20px]">
-                        <div>
-                            <h2 class="font-bold text-xl text-zinc-900">Laporan Keuangan Kasir</h2>
-                            <p id="report-branch-label" class="text-xs font-semibold text-zinc-500 mt-1">DBP Cabang...</p>
-                        </div>
-                        <div class="text-right">
-                            <p id="report-month-label" class="font-bold text-lg text-zinc-800">Bulan...</p>
-                        </div>
+                    <div class="p-6 border-b border-zinc-100 flex justify-between bg-zinc-50 rounded-t-[20px]">
+                        <div><h2 class="font-bold text-xl text-zinc-900">Laporan Keuangan Kasir</h2><p id="report-branch-label" class="text-xs font-semibold text-zinc-500 mt-1">Cabang</p></div>
+                        <div class="text-right"><p id="report-month-label" class="font-bold text-lg text-zinc-800">Bulan</p></div>
                     </div>
-
                     <div class="grid grid-cols-3 gap-4 p-6 border-b border-zinc-100">
-                        <div class="bg-zinc-50 p-4 rounded-xl border border-zinc-100">
-                            <p class="text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1">Total Transaksi</p>
-                            <p id="rep-total-trx" class="font-bold text-2xl text-zinc-900">0</p>
-                        </div>
-                        <div class="bg-blue-50 p-4 rounded-xl border border-blue-100">
-                            <p class="text-[10px] font-bold text-blue-500 uppercase tracking-wider mb-1">Gross Revenue (Kotor)</p>
-                            <p id="rep-total-revenue" class="font-bold text-2xl text-blue-700">Rp 0</p>
-                        </div>
-                        <div class="bg-red-50 p-4 rounded-xl border border-red-100">
-                            <p class="text-[10px] font-bold text-red-500 uppercase tracking-wider mb-1">Total Pengeluaran</p>
-                            <p id="rep-total-expense" class="font-bold text-2xl text-red-700">Rp 0</p>
-                        </div>
+                        <div class="bg-zinc-50 p-4 rounded-xl border border-zinc-100"><p class="text-[10px] font-bold text-zinc-400 uppercase mb-1">Total Transaksi</p><p id="rep-total-trx" class="font-bold text-2xl">0</p></div>
+                        <div class="bg-blue-50 p-4 rounded-xl border border-blue-100"><p class="text-[10px] font-bold text-blue-500 uppercase mb-1">Gross Revenue</p><p id="rep-total-revenue" class="font-bold text-2xl text-blue-700">Rp 0</p></div>
+                        <div class="bg-red-50 p-4 rounded-xl border border-red-100"><p class="text-[10px] font-bold text-red-500 uppercase mb-1">Pengeluaran</p><p id="rep-total-expense" class="font-bold text-2xl text-red-700">Rp 0</p></div>
                     </div>
-
                     <div class="flex-1 overflow-y-auto p-0">
                         <table class="w-full text-left border-collapse">
                             <thead class="bg-zinc-50 sticky top-0 border-b border-zinc-200">
-                                <tr>
-                                    <th class="p-4 text-xs font-bold text-zinc-500 uppercase">Tanggal</th>
-                                    <th class="p-4 text-xs font-bold text-zinc-500 uppercase text-center">Jml Cukur</th>
-                                    <th class="p-4 text-xs font-bold text-zinc-500 uppercase text-right">Pemasukan</th>
-                                    <th class="p-4 text-xs font-bold text-zinc-500 uppercase text-right">Pengeluaran</th>
-                                </tr>
+                                <tr><th class="p-4 text-xs font-bold text-zinc-500 uppercase">Tanggal</th><th class="p-4 text-xs text-center font-bold text-zinc-500 uppercase">Jml Cukur</th><th class="p-4 text-right text-xs font-bold text-zinc-500 uppercase">Pemasukan</th><th class="p-4 text-right text-xs font-bold text-zinc-500 uppercase">Pengeluaran</th></tr>
                             </thead>
-                            <tbody id="report-table-body" class="divide-y divide-zinc-100 text-sm">
-                                <tr><td colspan="4" class="p-8 text-center text-zinc-400">Pilih bulan dan tunggu data dimuat...</td></tr>
-                            </tbody>
+                            <tbody id="report-table-body" class="divide-y divide-zinc-100 text-sm"></tbody>
                         </table>
                     </div>
                 </div>
@@ -196,28 +155,14 @@
 
     <div id="modal-expense" class="fixed inset-0 z-50 bg-zinc-900/40 backdrop-blur-sm hidden flex-col items-center justify-center p-4">
         <div class="bg-white w-full max-w-sm rounded-[24px] p-6 shadow-2xl animate-slide-up border border-zinc-100">
-            <h2 class="font-bold text-xl mb-6 text-zinc-900">Input Pengeluaran</h2>
+            <h2 class="font-bold text-xl mb-6">Input Pengeluaran</h2>
             <div class="space-y-4">
-                <div>
-                    <label class="text-xs font-bold text-zinc-500 mb-1 block">Kategori</label>
-                    <select id="exp-kategori" class="w-full bg-zinc-50 text-zinc-900 font-semibold text-sm px-4 py-3 rounded-xl outline-none border border-zinc-200 focus:border-zinc-400">
-                        <option value="OPERASIONAL">Operasional</option>
-                        <option value="KONSUMSI">Konsumsi</option>
-                        <option value="MAINTENANCE">Maintenance</option>
-                        <option value="LAINNYA">Lainnya</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="text-xs font-bold text-zinc-500 mb-1 block">Deskripsi</label>
-                    <input type="text" id="exp-deskripsi" placeholder="Contoh: Beli Kopi" class="w-full bg-zinc-50 text-zinc-900 font-semibold text-sm px-4 py-3 rounded-xl outline-none border border-zinc-200 focus:border-zinc-400">
-                </div>
-                <div>
-                    <label class="text-xs font-bold text-zinc-500 mb-1 block">Nominal (Rp)</label>
-                    <input type="number" id="exp-nominal" placeholder="0" class="w-full bg-zinc-50 text-zinc-900 font-bold text-lg px-4 py-3 rounded-xl outline-none border border-zinc-200 focus:border-zinc-400">
-                </div>
+                <select id="exp-kategori" class="w-full bg-zinc-50 text-zinc-900 font-semibold text-sm px-4 py-3 rounded-xl border border-zinc-200"><option value="OPERASIONAL">Operasional</option><option value="KONSUMSI">Konsumsi</option><option value="MAINTENANCE">Maintenance</option><option value="LAINNYA">Lainnya</option></select>
+                <input type="text" id="exp-deskripsi" placeholder="Deskripsi" class="w-full bg-zinc-50 text-zinc-900 font-semibold text-sm px-4 py-3 rounded-xl border border-zinc-200">
+                <input type="number" id="exp-nominal" placeholder="Nominal Rp" class="w-full bg-zinc-50 text-zinc-900 font-bold text-lg px-4 py-3 rounded-xl border border-zinc-200">
                 <div class="flex gap-3 pt-4">
-                    <button onclick="CASHIER_LOGIC.closeExpenseModal()" class="btn-press flex-1 bg-zinc-100 text-zinc-600 py-3.5 rounded-xl font-bold text-sm hover:bg-zinc-200 transition-all">Batal</button>
-                    <button id="btn-submit-exp" onclick="CASHIER_LOGIC.submitExpense()" class="btn-press flex-1 bg-zinc-900 text-white py-3.5 rounded-xl font-bold text-sm shadow-md hover:bg-zinc-800 transition-all">Simpan</button>
+                    <button onclick="CASHIER_LOGIC.closeExpenseModal()" class="btn-press flex-1 bg-zinc-100 text-zinc-600 py-3.5 rounded-xl font-bold">Batal</button>
+                    <button onclick="CASHIER_LOGIC.submitExpense()" class="btn-press flex-1 bg-zinc-900 text-white py-3.5 rounded-xl font-bold">Simpan</button>
                 </div>
             </div>
         </div>
@@ -225,458 +170,192 @@
 
     <div id="modal-cancel" class="fixed inset-0 z-50 bg-zinc-900/40 backdrop-blur-sm hidden flex-col items-center justify-center p-4">
         <div class="bg-white w-full max-w-sm rounded-[24px] p-6 shadow-2xl animate-slide-up border border-red-100">
-            <div class="w-12 h-12 rounded-full bg-red-100 text-red-600 flex items-center justify-center mb-4">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
-            </div>
             <h2 class="font-bold text-xl text-zinc-900 mb-2">Batalkan Booking?</h2>
-            <p class="text-sm text-zinc-500 mb-6 leading-relaxed">Booking ini akan dihapus dari antrean dan jadwal akan dikosongkan. Ketik <span class="font-black text-red-600">YAKIN</span> untuk melanjutkan.</p>
-            
-            <input type="text" id="cancel-confirm-text" placeholder="Ketik YAKIN" class="w-full bg-zinc-50 text-center text-red-600 font-black tracking-widest text-lg px-4 py-3 rounded-xl outline-none border border-red-200 focus:border-red-400 mb-4">
-            
+            <p class="text-sm text-zinc-500 mb-6">Ketik <span class="font-black text-red-600">YAKIN</span> untuk melanjutkan pembatalan ini.</p>
+            <input type="text" id="cancel-confirm-text" placeholder="Ketik YAKIN" class="w-full bg-zinc-50 text-center text-red-600 font-black tracking-widest text-lg px-4 py-3 rounded-xl border border-red-200 mb-4">
             <div class="flex gap-3">
-                <button onclick="CASHIER_LOGIC.closeCancelModal()" class="btn-press flex-1 bg-zinc-100 text-zinc-600 py-3.5 rounded-xl font-bold text-sm hover:bg-zinc-200 transition-all">Kembali</button>
-                <button id="btn-submit-cancel" onclick="CASHIER_LOGIC.processCancel()" class="btn-press flex-1 bg-red-600 text-white py-3.5 rounded-xl font-bold text-sm shadow-md hover:bg-red-700 transition-all opacity-50 cursor-not-allowed" disabled>Batalkan</button>
+                <button onclick="CASHIER_LOGIC.closeCancelModal()" class="btn-press flex-1 bg-zinc-100 text-zinc-600 py-3.5 rounded-xl font-bold">Kembali</button>
+                <button id="btn-submit-cancel" onclick="CASHIER_LOGIC.processCancel()" class="btn-press flex-1 bg-red-600 text-white py-3.5 rounded-xl font-bold opacity-50 cursor-not-allowed" disabled>Batalkan</button>
             </div>
         </div>
     </div>
 
     <div id="loading-overlay" class="fixed inset-0 bg-white/80 backdrop-blur-sm hidden flex-col items-center justify-center z-[100]">
         <div class="w-10 h-10 border-4 border-zinc-200 border-t-zinc-900 rounded-full animate-spin mb-4"></div>
-        <h2 id="loading-text" class="font-bold text-zinc-800 tracking-wide text-sm">Memproses...</h2>
+        <h2 id="loading-text" class="font-bold tracking-wide text-sm">Memproses...</h2>
     </div>
 
     <script>
-        // Ganti dengan URL Prod Lo (Pastikan sama dengan n8n Pintu 2)
-        const CONFIG = {
-            WEBHOOK_URL: 'https://n8n-mzbmiib3etk4.kangkung.sumopod.my.id/webhook/a6512d05-a51a-4289-9063-9a4f17ac745a' 
-        };
-
-        const STATE = {
-            user: null,
-            cancelTargetId: null,
-            syncInterval: null,
-            rawReportData: null
-        };
-
+        const CONFIG = { WEBHOOK_URL: 'https://n8n-mzbmiib3etk4.kangkung.sumopod.my.id/webhook/a6512d05-a51a-4289-9063-9a4f17ac745a' };
+        const STATE = { user: null, cancelTargetId: null, rawReportData: null, sysDates: null };
         const UTIL = {
             formatRp: (num) => 'Rp ' + Number(num || 0).toLocaleString('id-ID'),
             cleanDate: (dateStr) => String(dateStr || "").substring(0, 10),
-            showLoading: (text) => {
-                document.getElementById('loading-text').innerText = text || "Memproses...";
-                document.getElementById('loading-overlay').classList.replace('hidden', 'flex');
+            formatDateId: (dateStr) => {
+                if(!dateStr) return "-";
+                const d = new Date(dateStr);
+                return d.toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
             },
-            hideLoading: () => {
-                document.getElementById('loading-overlay').classList.replace('flex', 'hidden');
-            }
+            showLoading: (t) => { document.getElementById('loading-text').innerText = t; document.getElementById('loading-overlay').classList.replace('hidden', 'flex'); },
+            hideLoading: () => document.getElementById('loading-overlay').classList.replace('flex', 'hidden')
         };
 
-        // --- 1. LOGIN SYSTEM ---
         const LOGIN_SYSTEM = {
             pin: "",
             init() {
-                const savedUser = localStorage.getItem('dbp_user');
-                if (savedUser) {
-                    STATE.user = JSON.parse(savedUser);
-                    this.routeUser();
-                }
+                const u = localStorage.getItem('dbp_user'); if (u) { STATE.user = JSON.parse(u); this.routeUser(); }
                 document.getElementById('userInput').addEventListener('input', function() { this.value = this.value.toUpperCase(); });
             },
             routeUser() {
                 if (!STATE.user) return;
-                const role = STATE.user.role;
-                document.getElementById('view-login').style.opacity = '0';
-                
-                setTimeout(() => {
-                    document.getElementById('view-login').classList.add('hidden');
-                    if (role === 'CASHIER') {
-                        document.getElementById('view-cashier').classList.remove('hidden');
-                        document.getElementById('view-cashier').classList.add('flex');
-                        CASHIER_LOGIC.init();
-                    } else {
-                        alert(`DASHBOARD ${role} DALAM PENGEMBANGAN.\nSilakan Logout.`);
-                        document.getElementById('view-login').style.opacity = '1';
-                        document.getElementById('view-login').classList.remove('hidden');
-                    }
-                }, 400);
+                document.getElementById('view-login').classList.add('hidden');
+                if (STATE.user.role === 'CASHIER') { document.getElementById('view-cashier').classList.remove('hidden'); document.getElementById('view-cashier').classList.add('flex'); CASHIER_LOGIC.init(); } 
+                else { alert(`DASHBOARD ${STATE.user.role} TAHAP DEV`); document.getElementById('view-login').classList.remove('hidden'); }
             },
             press(val) {
                 document.getElementById('error-msg').style.opacity = '0';
-                if (val === 'clear') this.pin = this.pin.slice(0, -1);
-                else if (this.pin.length < 4) this.pin += val;
-                
-                this.updateDots();
-                if (this.pin.length === 4) setTimeout(() => this.submit(), 200);
+                if (val === 'clear') this.pin = this.pin.slice(0, -1); else if (this.pin.length < 4) this.pin += val;
+                this.updateDots(); if (this.pin.length === 4) setTimeout(() => this.submit(), 200);
             },
-            updateDots() {
-                for (let i = 1; i <= 4; i++) {
-                    const dot = document.getElementById(`dot-${i}`);
-                    if (i <= this.pin.length) dot.classList.replace('bg-zinc-200', 'bg-zinc-800');
-                    else dot.classList.replace('bg-zinc-800', 'bg-zinc-200');
-                }
-            },
+            updateDots() { for (let i=1; i<=4; i++) { const d = document.getElementById(`dot-${i}`); if (i<=this.pin.length) d.classList.replace('bg-zinc-200','bg-zinc-800'); else d.classList.replace('bg-zinc-800','bg-zinc-200'); } },
             async submit() {
-                const username = document.getElementById('userInput').value.trim(); 
-                if (!username) { this.triggerError("ISI STAFF ID"); return; }
-                UTIL.showLoading("Verifikasi...");
-
+                const u = document.getElementById('userInput').value.trim(); if (!u) return this.triggerError("ISI ID");
+                UTIL.showLoading("Verifikasi");
                 try {
-                    const res = await fetch(CONFIG.WEBHOOK_URL, {
-                        method: 'POST', headers: {'Content-Type': 'application/json'},
-                        body: JSON.stringify({ action: 'login', username: username, password: this.pin })
-                    });
-                    const data = await res.json();
-                    const isSuccess = data.success || (Array.isArray(data) && data[0] && data[0].success);
-                    
-                    if (isSuccess) {
-                        STATE.user = data.user || data[0].user;
-                        localStorage.setItem('dbp_user', JSON.stringify(STATE.user));
-                        this.routeUser();
-                    } else throw new Error("Invalid");
-                } catch (e) {
-                    this.triggerError("AKSES DITOLAK");
-                } finally {
-                    UTIL.hideLoading();
-                    document.getElementById('userInput').value = "";
-                    this.pin = ""; this.updateDots();
-                }
+                    const res = await fetch(CONFIG.WEBHOOK_URL, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'login', username: u, password: this.pin }) });
+                    const data = await res.json(); const ok = data.success || (data[0] && data[0].success);
+                    if (ok) { STATE.user = data.user || data[0].user; localStorage.setItem('dbp_user', JSON.stringify(STATE.user)); this.routeUser(); } else throw new Error();
+                } catch (e) { this.triggerError("DITOLAK"); } finally { UTIL.hideLoading(); this.pin = ""; this.updateDots(); }
             },
-            triggerError(msg) {
-                this.pin = ""; this.updateDots();
-                document.getElementById('error-msg').innerText = msg;
-                document.getElementById('error-msg').style.opacity = '1';
-            },
-            logout() {
-                localStorage.removeItem('dbp_user');
-                location.reload(); 
-            }
+            triggerError(msg) { this.pin = ""; this.updateDots(); document.getElementById('error-msg').innerText = msg; document.getElementById('error-msg').style.opacity = '1'; },
+            logout() { localStorage.removeItem('dbp_user'); location.reload(); }
         };
 
-        // --- 2. CASHIER LOGIC ---
         const CASHIER_LOGIC = {
             init() {
                 document.getElementById('cashier-branch-name').innerText = STATE.user.branch;
                 document.getElementById('report-branch-label').innerText = STATE.user.branch;
-                
-                // Set default month ke bulan ini
-                const now = new Date();
-                document.getElementById('report-month').value = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
-
-                this.loadData();
-                this.loadReportData(); // Pre-load report data
-
-                // Auto-sync setiap 2 Menit (120.000 ms)
-                STATE.syncInterval = setInterval(() => {
-                    this.loadData(true); // silent = true
-                }, 120000);
-
-                // Listener Modal Cancel
-                document.getElementById('cancel-confirm-text').addEventListener('input', function(e) {
+                const now = new Date(); document.getElementById('report-month').value = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
+                this.loadData(); this.loadReportData();
+                setInterval(() => this.loadData(true), 120000);
+                document.getElementById('cancel-confirm-text').addEventListener('input', function() {
                     const btn = document.getElementById('btn-submit-cancel');
-                    if(this.value === 'YAKIN') {
-                        btn.disabled = false; btn.classList.remove('opacity-50', 'cursor-not-allowed');
-                    } else {
-                        btn.disabled = true; btn.classList.add('opacity-50', 'cursor-not-allowed');
-                    }
+                    if(this.value === 'YAKIN') { btn.disabled = false; btn.classList.remove('opacity-50', 'cursor-not-allowed'); } 
+                    else { btn.disabled = true; btn.classList.add('opacity-50', 'cursor-not-allowed'); }
                 });
             },
-
             switchTab(tab) {
-                document.getElementById('tab-queue').classList.add('hidden');
-                document.getElementById('tab-report').classList.add('hidden');
-                document.getElementById('tab-btn-queue').classList.replace('bg-white', 'text-zinc-500');
-                document.getElementById('tab-btn-queue').classList.remove('shadow-sm', 'text-zinc-900');
-                document.getElementById('tab-btn-report').classList.replace('bg-white', 'text-zinc-500');
-                document.getElementById('tab-btn-report').classList.remove('shadow-sm', 'text-zinc-900');
-
-                document.getElementById(`tab-${tab}`).classList.remove('hidden');
-                document.getElementById(`tab-btn-${tab}`).classList.add('bg-white', 'shadow-sm', 'text-zinc-900');
-                document.getElementById(`tab-btn-${tab}`).classList.remove('text-zinc-500');
-
+                document.getElementById('tab-queue').classList.add('hidden'); document.getElementById('tab-report').classList.add('hidden');
+                document.getElementById('tab-btn-queue').classList.replace('bg-white', 'text-zinc-500'); document.getElementById('tab-btn-queue').classList.remove('shadow-sm', 'text-zinc-900');
+                document.getElementById('tab-btn-report').classList.replace('bg-white', 'text-zinc-500'); document.getElementById('tab-btn-report').classList.remove('shadow-sm', 'text-zinc-900');
+                document.getElementById(`tab-${tab}`).classList.remove('hidden'); document.getElementById(`tab-btn-${tab}`).classList.add('bg-white', 'shadow-sm', 'text-zinc-900'); document.getElementById(`tab-btn-${tab}`).classList.remove('text-zinc-500');
                 if(tab === 'report') this.processReport();
             },
-
             async loadData(silent = false) {
-                const syncText = document.getElementById('sync-text');
-                const indicator = document.getElementById('sync-indicator');
-                syncText.innerText = "Syncing..."; indicator.classList.replace('bg-green-500', 'bg-orange-500');
-
-                if(!silent) {
-                    document.getElementById('queue-loading').style.display = 'flex';
-                    document.getElementById('expense-loading').style.display = 'block';
-                }
-
+                const sText = document.getElementById('sync-text'); const sInd = document.getElementById('sync-indicator');
+                sText.innerText = "Syncing..."; sInd.classList.replace('bg-green-500', 'bg-orange-500');
+                if(!silent) { document.getElementById('queue-loading').style.display = 'flex'; document.getElementById('expense-loading').style.display = 'block'; }
                 try {
-                    const res = await fetch(CONFIG.WEBHOOK_URL, {
-                        method: 'POST', headers: {'Content-Type': 'application/json'},
-                        body: JSON.stringify({ action: 'get_cashier_data', branch: STATE.user.branch })
-                    });
-                    const rawData = await res.json();
-                    const payload = Array.isArray(rawData) ? rawData[0] : rawData;
-
-                    if (payload.success) {
-                        this.renderQueue(payload.queue || []);
-                        this.renderExpenses(payload.expenses || []);
-                    }
-                } catch (e) {
-                    console.error("Sync Error");
-                } finally {
-                    syncText.innerText = "Auto-Sync On"; indicator.classList.replace('bg-orange-500', 'bg-green-500');
-                    document.getElementById('queue-loading').style.display = 'none';
-                    document.getElementById('expense-loading').style.display = 'none';
+                    const res = await fetch(CONFIG.WEBHOOK_URL, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'get_cashier_data', branch: STATE.user.branch }) });
+                    const data = await res.json(); const payload = data[0] || data;
+                    if (payload.success) { STATE.sysDates = payload.sys_dates; this.renderQueue(payload.queue || []); this.renderExpenses(payload.expenses || []); this.updateSummary(payload.queue, payload.expenses); }
+                } catch (e) {} finally {
+                    sText.innerText = "Auto-Sync On"; sInd.classList.replace('bg-orange-500', 'bg-green-500');
+                    document.getElementById('queue-loading').style.display = 'none'; document.getElementById('expense-loading').style.display = 'none';
                 }
             },
-
+            updateSummary(queue, expenses) {
+                let omset = 0; let exp = 0;
+                queue.forEach(q => { if(q.status === 'DONE' && UTIL.cleanDate(q.tanggal) === STATE.sysDates.today) omset += (Number(q.price)||0); });
+                expenses.forEach(e => { exp += (Number(e.nominal)||0); });
+                document.getElementById('sum-omset').innerText = UTIL.formatRp(omset);
+                document.getElementById('sum-expense').innerText = UTIL.formatRp(exp);
+                document.getElementById('sum-profit').innerText = UTIL.formatRp(omset - exp);
+            },
             renderQueue(data) {
                 const container = document.getElementById('queue-container');
                 Array.from(container.children).forEach(c => { if(c.id !== 'queue-loading') c.remove(); });
+                
+                const byDate = { today: [], tomorrow: [], lusa: [] };
+                data.forEach(d => {
+                    const dt = UTIL.cleanDate(d.tanggal);
+                    if(dt === STATE.sysDates.today) byDate.today.push(d);
+                    else if(dt === STATE.sysDates.tomorrow) byDate.tomorrow.push(d);
+                    else if(dt === STATE.sysDates.lusa) byDate.lusa.push(d);
+                });
 
-                // Sortir berdasar jam, abaikan yang RESCHEDULE
-                const validQueue = data.filter(d => d.status !== 'RESCHEDULE').sort((a,b) => a.jam.localeCompare(b.jam));
-                const pendingCount = validQueue.filter(d => d.status !== 'DONE').length;
-                document.getElementById('queue-count').innerText = pendingCount;
-
-                if (validQueue.length === 0) {
-                    container.insertAdjacentHTML('beforeend', `<div class="text-center py-10 text-zinc-400 font-bold text-sm">Belum ada antrean hari ini.</div>`);
-                    return;
-                }
-
-                validQueue.forEach(item => {
-                    const isDone = item.status === 'DONE';
-                    const isPending = item.status === 'PENDING';
+                const buildHtml = (title, items, isFuture) => {
+                    if(items.length === 0) return '';
+                    items.sort((a,b) => a.jam.localeCompare(b.jam));
+                    let html = `<div class="mb-6"><h3 class="text-xs font-bold text-zinc-400 uppercase tracking-widest mb-3 pb-1 border-b border-zinc-200">${title}</h3><div class="space-y-3">`;
                     
-                    let statusBadge = '';
-                    if (isDone) statusBadge = `<span class="text-[10px] font-bold uppercase px-2 py-1 rounded bg-green-100 text-green-700">✓ Selesai</span>`;
-                    else if (isPending) statusBadge = `<span class="text-[10px] font-bold uppercase px-2 py-1 rounded bg-zinc-100 text-zinc-500">Pending</span>`;
-                    else statusBadge = `<span class="text-[10px] font-bold uppercase px-2 py-1 rounded bg-blue-100 text-blue-700">On Duty</span>`;
-
-                    let actionBtns = '';
-                    if (!isDone) {
-                        const primaryBtn = isPending 
-                            ? `<button onclick="CASHIER_LOGIC.updateStatus('${item.id}', 'ON DUTY')" class="btn-press bg-blue-600 text-white px-4 py-2 rounded-lg text-xs font-bold shadow-sm hover:bg-blue-700">Mulai</button>`
-                            : `<button onclick="CASHIER_LOGIC.updateStatus('${item.id}', 'DONE')" class="btn-press bg-zinc-900 text-white px-4 py-2 rounded-lg text-xs font-bold shadow-sm hover:bg-zinc-800">Selesai</button>`;
+                    items.forEach(item => {
+                        const isDone = item.status === 'DONE'; const isPending = item.status === 'PENDING';
+                        let sBadge = isDone ? `<span class="text-[9px] font-bold uppercase px-2 py-1 rounded bg-zinc-200 text-zinc-500">✓ Selesai</span>` : (isPending ? `<span class="text-[9px] font-bold uppercase px-2 py-1 rounded bg-zinc-100 text-zinc-500">Pending</span>` : `<span class="text-[9px] font-bold uppercase px-2 py-1 rounded bg-blue-100 text-blue-700">On Duty</span>`);
+                        let aBtns = '';
                         
-                        const cancelBtn = isPending ? `<button onclick="CASHIER_LOGIC.openCancelModal('${item.id}')" class="btn-press bg-white border border-red-200 text-red-600 px-3 py-2 rounded-lg text-xs font-bold hover:bg-red-50">Cancel</button>` : '';
-                        
-                        actionBtns = `<div class="flex gap-2 mt-3 sm:mt-0">${cancelBtn}${primaryBtn}</div>`;
-                    }
+                        if (!isDone) {
+                            const cBtn = `<button onclick="CASHIER_LOGIC.openCancelModal('${item.id}')" class="btn-press bg-white border border-red-200 text-red-600 px-3 py-2 rounded-lg text-[11px] font-bold hover:bg-red-50">Cancel</button>`;
+                            let pBtn = '';
+                            if(!isFuture) {
+                                pBtn = isPending ? `<button onclick="CASHIER_LOGIC.updateStatus('${item.id}', 'ON DUTY')" class="btn-press bg-blue-600 text-white px-4 py-2 rounded-lg text-[11px] font-bold hover:bg-blue-700">Mulai</button>` : `<button onclick="CASHIER_LOGIC.updateStatus('${item.id}', 'DONE')" class="btn-press bg-zinc-900 text-white px-4 py-2 rounded-lg text-[11px] font-bold hover:bg-zinc-800">Selesai</button>`;
+                            } else {
+                                pBtn = `<span class="text-[10px] text-zinc-400 font-medium italic mt-2">Locked</span>`;
+                            }
+                            aBtns = `<div class="flex items-center gap-2 mt-2 sm:mt-0">${cBtn}${pBtn}</div>`;
+                        }
 
-                    const cardClass = isDone ? "bg-zinc-50 opacity-70" : "bg-white apple-shadow";
+                        html += `<div class="${isDone ? 'bg-zinc-50 border-zinc-100 opacity-60' : 'bg-white border-zinc-200 apple-shadow'} border rounded-2xl p-4 flex flex-col sm:flex-row justify-between sm:items-center">
+                            <div><div class="flex items-center gap-3 mb-1"><span class="text-base font-bold text-zinc-900">${item.jam}</span>${sBadge}</div><h3 class="font-bold text-[15px] text-zinc-800 leading-none mb-1">${item.cust_name || 'Walk-In'}</h3><p class="text-[10px] font-semibold text-zinc-500">Capster: ${item.capster_id || '-'} &bull; ${UTIL.formatRp(item.price)}</p></div>
+                            ${aBtns}</div>`;
+                    });
+                    return html + `</div></div>`;
+                };
 
-                    const html = `
-                    <div class="${cardClass} border border-zinc-200 rounded-[16px] p-5 flex flex-col sm:flex-row justify-between items-start sm:items-center transition-all">
-                        <div>
-                            <div class="flex items-center gap-3 mb-1">
-                                <span class="text-lg font-bold text-zinc-900">${item.jam}</span>
-                                ${statusBadge}
-                            </div>
-                            <h3 class="font-bold text-lg text-zinc-800 tracking-tight leading-none mb-1.5">${item.cust_name || 'Walk-In Guest'}</h3>
-                            <p class="text-[11px] font-semibold text-zinc-500">Capster: <span class="text-zinc-800">${item.capster_id || '-'}</span> &bull; ${UTIL.formatRp(item.price)}</p>
-                        </div>
-                        ${actionBtns}
-                    </div>`;
-                    container.insertAdjacentHTML('beforeend', html);
+                let finalHtml = buildHtml("HARI INI", byDate.today, false) + buildHtml(`BESOK (${UTIL.formatDateId(STATE.sysDates.tomorrow)})`, byDate.tomorrow, true) + buildHtml(`LUSA (${UTIL.formatDateId(STATE.sysDates.lusa)})`, byDate.lusa, true);
+                if(!finalHtml) finalHtml = `<div class="text-center py-10 text-zinc-400 font-bold text-sm">Belum ada antrean.</div>`;
+                container.insertAdjacentHTML('beforeend', finalHtml);
+            },
+            renderExpenses(data) {
+                const container = document.getElementById('expense-container'); Array.from(container.children).forEach(c => { if(c.id !== 'expense-loading') c.remove(); });
+                if (data.length === 0) container.insertAdjacentHTML('beforeend', `<div class="text-center py-6 text-zinc-400 font-semibold text-xs">Belum ada pengeluaran.</div>`);
+                else data.forEach(item => {
+                    container.insertAdjacentHTML('beforeend', `<div class="bg-white border border-zinc-100 rounded-xl p-3 flex justify-between items-center shadow-sm"><div><p class="font-bold text-zinc-800 text-sm">${item.deskripsi}</p><p class="text-[9px] font-bold text-zinc-400 uppercase mt-0.5">${item.kategori}</p></div><span class="font-bold text-red-500 text-sm">- ${UTIL.formatRp(item.nominal)}</span></div>`);
                 });
             },
-
-            renderExpenses(data) {
-                const container = document.getElementById('expense-container');
-                Array.from(container.children).forEach(c => { if(c.id !== 'expense-loading') c.remove(); });
-
-                let total = 0;
-                if (data.length === 0) {
-                    container.insertAdjacentHTML('beforeend', `<div class="text-center py-6 text-zinc-400 font-semibold text-xs">Bersih.</div>`);
-                } else {
-                    data.forEach(item => {
-                        const nom = Number(item.nominal) || 0;
-                        total += nom;
-                        const html = `
-                        <div class="bg-white border border-zinc-100 rounded-xl p-3.5 flex justify-between items-center shadow-sm">
-                            <div>
-                                <p class="font-bold text-zinc-800 text-sm">${item.deskripsi || '-'}</p>
-                                <p class="text-[10px] font-semibold text-zinc-400 uppercase mt-0.5">${item.kategori || '-'}</p>
-                            </div>
-                            <span class="font-bold text-red-500 text-sm">- ${UTIL.formatRp(nom)}</span>
-                        </div>`;
-                        container.insertAdjacentHTML('beforeend', html);
-                    });
-                }
-                document.getElementById('expense-total').innerText = UTIL.formatRp(total);
-            },
-
-            // --- Aksi Kasir ---
-            async updateStatus(id, newStatus) {
-                UTIL.showLoading("Update Status...");
-                try {
-                    const res = await fetch(CONFIG.WEBHOOK_URL, {
-                        method: 'POST', headers: {'Content-Type': 'application/json'},
-                        body: JSON.stringify({ action: 'update_status', id: id, status: newStatus })
-                    });
-                    if(res.ok) await this.loadData(true);
-                } catch (e) { alert("Gagal Update"); }
-                finally { UTIL.hideLoading(); }
-            },
-
-            openCancelModal(id) {
-                STATE.cancelTargetId = id;
-                document.getElementById('cancel-confirm-text').value = '';
-                document.getElementById('btn-submit-cancel').disabled = true;
-                document.getElementById('btn-submit-cancel').classList.add('opacity-50', 'cursor-not-allowed');
-                document.getElementById('modal-cancel').classList.replace('hidden', 'flex');
-            },
-            closeCancelModal() {
-                STATE.cancelTargetId = null;
-                document.getElementById('modal-cancel').classList.replace('flex', 'hidden');
-            },
-            async processCancel() {
-                if(!STATE.cancelTargetId) return;
-                this.closeCancelModal();
-                UTIL.showLoading("Membatalkan Booking...");
-                try {
-                    const res = await fetch(CONFIG.WEBHOOK_URL, {
-                        method: 'POST', headers: {'Content-Type': 'application/json'},
-                        body: JSON.stringify({ action: 'cancel_book', id: STATE.cancelTargetId })
-                    });
-                    if(res.ok) await this.loadData(true);
-                } catch (e) { alert("Gagal Cancel"); }
-                finally { UTIL.hideLoading(); }
-            },
-
-            openExpenseModal() {
-                document.getElementById('exp-deskripsi').value = ''; document.getElementById('exp-nominal').value = '';
-                document.getElementById('modal-expense').classList.replace('hidden', 'flex');
-            },
+            async updateStatus(id, newStatus) { UTIL.showLoading("Update..."); try { await fetch(CONFIG.WEBHOOK_URL, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'update_status', id: Number(id), status: newStatus }) }); await this.loadData(true); } catch (e) { alert("Gagal"); } finally { UTIL.hideLoading(); } },
+            openCancelModal(id) { STATE.cancelTargetId = id; document.getElementById('cancel-confirm-text').value = ''; document.getElementById('btn-submit-cancel').disabled = true; document.getElementById('btn-submit-cancel').classList.add('opacity-50', 'cursor-not-allowed'); document.getElementById('modal-cancel').classList.replace('hidden', 'flex'); },
+            closeCancelModal() { STATE.cancelTargetId = null; document.getElementById('modal-cancel').classList.replace('flex', 'hidden'); },
+            async processCancel() { if(!STATE.cancelTargetId) return; this.closeCancelModal(); UTIL.showLoading("Membatalkan..."); try { await fetch(CONFIG.WEBHOOK_URL, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'cancel_book', id: Number(STATE.cancelTargetId) }) }); await this.loadData(true); } catch (e) { alert("Gagal"); } finally { UTIL.hideLoading(); } },
+            openExpenseModal() { document.getElementById('exp-deskripsi').value = ''; document.getElementById('exp-nominal').value = ''; document.getElementById('modal-expense').classList.replace('hidden', 'flex'); },
             closeExpenseModal() { document.getElementById('modal-expense').classList.replace('flex', 'hidden'); },
             async submitExpense() {
-                const tgl = new Date().toISOString().split('T')[0];
-                const kat = document.getElementById('exp-kategori').value;
-                const desc = document.getElementById('exp-deskripsi').value.trim();
-                const nom = document.getElementById('exp-nominal').value;
-
-                if(!desc || !nom) return alert("Isi deskripsi dan nominal!");
-                this.closeExpenseModal(); UTIL.showLoading("Mencatat Pengeluaran...");
-
-                try {
-                    const res = await fetch(CONFIG.WEBHOOK_URL, {
-                        method: 'POST', headers: {'Content-Type': 'application/json'},
-                        body: JSON.stringify({ action: 'add_expense', tanggal: tgl, branch: STATE.user.branch, cashier_id: STATE.user.staff_id, kategori: kat, deskripsi: desc, nominal: nom })
-                    });
-                    if(res.ok) await this.loadData(true);
-                } catch (e) { alert("Gagal Input"); }
-                finally { UTIL.hideLoading(); }
+                const desc = document.getElementById('exp-deskripsi').value.trim(); const nom = document.getElementById('exp-nominal').value; if(!desc || !nom) return alert("Isi semua form!");
+                this.closeExpenseModal(); UTIL.showLoading("Menyimpan...");
+                try { await fetch(CONFIG.WEBHOOK_URL, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'add_expense', tanggal: STATE.sysDates.today, branch: STATE.user.branch, cashier_id: STATE.user.staff_id, kategori: document.getElementById('exp-kategori').value, deskripsi: desc, nominal: Number(nom) }) }); await this.loadData(true); } catch (e) { alert("Gagal"); } finally { UTIL.hideLoading(); }
             },
-
-            // --- Sistem Report ---
-            async loadReportData() {
-                try {
-                    const res = await fetch(CONFIG.WEBHOOK_URL, {
-                        method: 'POST', headers: {'Content-Type': 'application/json'},
-                        body: JSON.stringify({ action: 'get_cashier_report', branch: STATE.user.branch })
-                    });
-                    const data = await res.json();
-                    if(data.success || data[0]?.success) {
-                        STATE.rawReportData = data.bookings ? data : data[0];
-                    }
-                } catch(e) { console.error("Report fail"); }
-            },
-
+            async loadReportData() { try { const res = await fetch(CONFIG.WEBHOOK_URL, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'get_cashier_report', branch: STATE.user.branch }) }); const data = await res.json(); if(data.success || data[0]?.success) STATE.rawReportData = data.bookings ? data : data[0]; } catch(e){} },
             processReport() {
-                if(!STATE.rawReportData) return;
-                const selectedMonth = document.getElementById('report-month').value; // format "YYYY-MM"
-                if(!selectedMonth) return;
-
-                document.getElementById('report-month-label').innerText = "Bulan: " + selectedMonth;
-
-                // Filter data berdasarkan bulan
-                const books = STATE.rawReportData.bookings.filter(b => b.tanggal && b.tanggal.startsWith(selectedMonth));
-                const exps = STATE.rawReportData.expenses.filter(e => e.tanggal && e.tanggal.startsWith(selectedMonth));
-
-                // Agregasi per hari
-                const dailyStats = {};
-                let grandRev = 0; let grandExp = 0;
-
-                books.forEach(b => {
-                    const d = UTIL.cleanDate(b.tanggal);
-                    const val = Number(b.price) || 0;
-                    if(!dailyStats[d]) dailyStats[d] = { count: 0, rev: 0, exp: 0 };
-                    dailyStats[d].count += 1;
-                    dailyStats[d].rev += val;
-                    grandRev += val;
-                });
-
-                exps.forEach(e => {
-                    const d = UTIL.cleanDate(e.tanggal);
-                    const val = Number(e.nominal) || 0;
-                    if(!dailyStats[d]) dailyStats[d] = { count: 0, rev: 0, exp: 0 };
-                    dailyStats[d].exp += val;
-                    grandExp += val;
-                });
-
-                // Update UI Summary
-                document.getElementById('rep-total-trx').innerText = books.length;
-                document.getElementById('rep-total-revenue').innerText = UTIL.formatRp(grandRev);
-                document.getElementById('rep-total-expense').innerText = UTIL.formatRp(grandExp);
-
-                // Render Tabel
-                const tbody = document.getElementById('report-table-body');
-                tbody.innerHTML = '';
-                const sortedDates = Object.keys(dailyStats).sort();
-
-                if(sortedDates.length === 0) {
-                    tbody.innerHTML = `<tr><td colspan="4" class="p-8 text-center text-zinc-400">Tidak ada data untuk bulan ini.</td></tr>`;
-                    return;
-                }
-
-                sortedDates.forEach(d => {
-                    const stat = dailyStats[d];
-                    const tr = `
-                    <tr class="hover:bg-zinc-50 transition-colors">
-                        <td class="p-4 text-zinc-900 font-semibold">${d}</td>
-                        <td class="p-4 text-center text-zinc-600">${stat.count}</td>
-                        <td class="p-4 text-right text-blue-600 font-semibold">${UTIL.formatRp(stat.rev)}</td>
-                        <td class="p-4 text-right text-red-600 font-semibold">${UTIL.formatRp(stat.exp)}</td>
-                    </tr>`;
-                    tbody.insertAdjacentHTML('beforeend', tr);
-                });
+                if(!STATE.rawReportData) return; const month = document.getElementById('report-month').value; if(!month) return;
+                document.getElementById('report-month-label').innerText = "Bulan: " + month;
+                const dailyStats = {}; let grandRev = 0; let grandExp = 0;
+                STATE.rawReportData.bookings.filter(b => UTIL.cleanDate(b.tanggal).startsWith(month)).forEach(b => { const d = UTIL.cleanDate(b.tanggal); const v = Number(b.price)||0; if(!dailyStats[d]) dailyStats[d]={c:0,r:0,e:0}; dailyStats[d].c++; dailyStats[d].r+=v; grandRev+=v; });
+                STATE.rawReportData.expenses.filter(e => UTIL.cleanDate(e.tanggal).startsWith(month)).forEach(e => { const d = UTIL.cleanDate(e.tanggal); const v = Number(e.nominal)||0; if(!dailyStats[d]) dailyStats[d]={c:0,r:0,e:0}; dailyStats[d].e+=v; grandExp+=v; });
+                document.getElementById('rep-total-trx').innerText = Object.values(dailyStats).reduce((sum, item) => sum + item.c, 0); document.getElementById('rep-total-revenue').innerText = UTIL.formatRp(grandRev); document.getElementById('rep-total-expense').innerText = UTIL.formatRp(grandExp);
+                const tbody = document.getElementById('report-table-body'); tbody.innerHTML = '';
+                const sorted = Object.keys(dailyStats).sort();
+                if(sorted.length===0) return tbody.innerHTML = `<tr><td colspan="4" class="p-8 text-center text-zinc-400 font-semibold">Tidak ada data.</td></tr>`;
+                sorted.forEach(d => { tbody.insertAdjacentHTML('beforeend', `<tr class="border-b border-zinc-100 hover:bg-zinc-50"><td class="p-4 font-semibold text-zinc-800">${d}</td><td class="p-4 text-center font-bold">${dailyStats[d].c}</td><td class="p-4 text-right text-blue-600 font-semibold">${UTIL.formatRp(dailyStats[d].r)}</td><td class="p-4 text-right text-red-600 font-semibold">${UTIL.formatRp(dailyStats[d].e)}</td></tr>`); });
             },
-
             exportCSV() {
-                const selectedMonth = document.getElementById('report-month').value;
-                const rows = document.querySelectorAll("#report-table-body tr");
-                if(rows.length === 0 || rows[0].innerText.includes("Tidak ada data")) return alert("Tidak ada data untuk diunduh.");
-
-                let csvContent = "data:text/csv;charset=utf-8,Tanggal,Jml Cukur,Pemasukan,Pengeluaran\n";
-                rows.forEach(r => {
-                    const cols = r.querySelectorAll("td");
-                    if(cols.length === 4) {
-                        const rowData = [cols[0].innerText, cols[1].innerText, cols[2].innerText.replace(/[^0-9]/g,''), cols[3].innerText.replace(/[^0-9]/g,'')];
-                        csvContent += rowData.join(",") + "\n";
-                    }
-                });
-
-                const encodedUri = encodeURI(csvContent);
-                const link = document.createElement("a");
-                link.setAttribute("href", encodedUri);
-                link.setAttribute("download", `Laporan_DBP_${selectedMonth}.csv`);
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
+                const month = document.getElementById('report-month').value; const rows = document.querySelectorAll("#report-table-body tr");
+                if(rows.length===0 || rows[0].innerText.includes("Tidak ada data")) return alert("Kosong.");
+                let csv = "data:text/csv;charset=utf-8,Tanggal,Jml Cukur,Pemasukan,Pengeluaran\n";
+                rows.forEach(r => { const c = r.querySelectorAll("td"); if(c.length===4) csv += `${c[0].innerText},${c[1].innerText},${c[2].innerText.replace(/[^0-9]/g,'')},${c[3].innerText.replace(/[^0-9]/g,'')}\n`; });
+                const a = document.createElement("a"); a.href = encodeURI(csv); a.download = `DBP_${month}.csv`; document.body.appendChild(a); a.click(); document.body.removeChild(a);
             },
-
-            exportPDF() {
-                const element = document.getElementById('printable-report');
-                const selectedMonth = document.getElementById('report-month').value;
-                const opt = {
-                    margin:       0.5,
-                    filename:     `Laporan_DBP_${selectedMonth}.pdf`,
-                    image:        { type: 'jpeg', quality: 0.98 },
-                    html2canvas:  { scale: 2 },
-                    jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
-                };
-                UTIL.showLoading("Mencetak PDF...");
-                html2pdf().set(opt).from(element).save().then(() => UTIL.hideLoading());
-            }
+            exportPDF() { UTIL.showLoading("Cetak PDF..."); html2pdf().set({margin:0.5, filename:`DBP_${document.getElementById('report-month').value}.pdf`, html2canvas:{scale:2}, jsPDF:{unit:'in',format:'a4',orientation:'portrait'}}).from(document.getElementById('printable-report')).save().then(()=>UTIL.hideLoading()); }
         };
-
         window.onload = () => LOGIN_SYSTEM.init();
     </script>
 </body>
