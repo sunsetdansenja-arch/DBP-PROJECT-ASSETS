@@ -55,9 +55,7 @@
             </div>
 
             <div class="grid grid-cols-3 gap-3 w-full px-4">
-                <script>
-                    for(let i=1; i<=9; i++) document.write(`<button onclick="LOGIN_SYSTEM.press('${i}')" class="btn-press bg-white border border-zinc-200 rounded-2xl h-14 text-xl font-medium text-zinc-700 shadow-sm transition-all hover:bg-zinc-50">${i}</button>`);
-                </script>
+                <script>for(let i=1; i<=9; i++) document.write(`<button onclick="LOGIN_SYSTEM.press('${i}')" class="btn-press bg-white border border-zinc-200 rounded-2xl h-14 text-xl font-medium text-zinc-700 shadow-sm transition-all hover:bg-zinc-50">${i}</button>`);</script>
                 <button onclick="LOGIN_SYSTEM.press('clear')" class="btn-press bg-white border border-zinc-200 rounded-2xl h-14 text-xs font-bold uppercase text-zinc-400 shadow-sm transition-all hover:bg-zinc-50">Del</button>
                 <button onclick="LOGIN_SYSTEM.press('0')" class="btn-press bg-white border border-zinc-200 rounded-2xl h-14 text-xl font-medium text-zinc-700 shadow-sm transition-all hover:bg-zinc-50">0</button>
             </div>
@@ -308,13 +306,16 @@
                 setTimeout(() => {
                     document.getElementById('view-login').classList.add('hidden');
                     
-                    const role = String(STATE.user.role).toUpperCase();
+                    // ==========================================
+                    // FIX: REGEX + TRIM (BULLETPROOF ROLE CHECK)
+                    // ==========================================
+                    const role = String(STATE.user.role || "").toUpperCase().trim();
 
-                    if (role.includes('CASHIER')) {
+                    if (/CASHIER/i.test(role)) {
                         document.getElementById('view-cashier').classList.remove('hidden'); document.getElementById('view-cashier').classList.add('flex'); CASHIER_LOGIC.init();
-                    } else if (role.includes('MANAGEMENT') || role.includes('OWNER')) {
+                    } else if (/MANAGEMENT|OWNER/i.test(role)) {
                         document.getElementById('view-management').classList.remove('hidden'); document.getElementById('view-management').classList.add('flex'); MANAGEMENT_LOGIC.init();
-                    } else if (role.includes('CAPSTER') || role.includes('BARBER')) {
+                    } else if (/CAPSTER|BARBER/i.test(role)) {
                         document.getElementById('view-capster').classList.remove('hidden'); document.getElementById('view-capster').classList.add('flex'); CAPSTER_LOGIC.init();
                     } else {
                         alert(`DASHBOARD UNTUK JABATAN "${STATE.user.role}" BELUM TERSEDIA.`); document.getElementById('view-login').style.opacity = '1'; document.getElementById('view-login').classList.remove('hidden');
@@ -504,7 +505,7 @@
             init() {
                 document.getElementById('mgt-greeting').innerText = `Welcome, ${UTIL.toTitleCase(STATE.user.staff_id)}`;
                 const filterSelect = document.getElementById('mgt-branch-filter'); const filterSelectMobile = document.getElementById('mgt-branch-filter-mobile');
-                if (STATE.user.role === 'BRANCH OWNER') {
+                if (String(STATE.user.role).toUpperCase().includes('OWNER') && !String(STATE.user.role).toUpperCase().includes('MANAGEMENT')) {
                     filterSelect.innerHTML = `<option value="${STATE.user.branch}">${STATE.user.branch.replace('DI BAWAH POHON ', 'Cabang ')}</option>`;
                     filterSelectMobile.innerHTML = `<option value="${STATE.user.branch}">${STATE.user.branch.replace('DI BAWAH POHON ', 'Cabang ')}</option>`;
                     filterSelect.disabled = true; filterSelectMobile.disabled = true;
@@ -527,7 +528,7 @@
                 tbody.innerHTML = lb.map((capster, index) => {
                     const rank = index + 1; let rankHtml = `<span class="font-bold text-zinc-500">${rank}</span>`;
                     if(rank === 1) rankHtml = `<span class="bg-orange-100 text-orange-600 font-bold px-2 py-1 rounded-full text-xs">🥇 1</span>`; else if(rank === 2) rankHtml = `<span class="bg-zinc-100 text-zinc-600 font-bold px-2 py-1 rounded-full text-xs">🥈 2</span>`; else if(rank === 3) rankHtml = `<span class="bg-orange-50 text-orange-800 font-bold px-2 py-1 rounded-full text-xs">🥉 3</span>`;
-                    const capsterName = capster.capster_id; // Di backend udah dikirim nama
+                    const capsterName = capster.capster_id; 
                     return `<tr class="hover:bg-zinc-50 transition-colors"><td class="py-4 px-6 text-center">${rankHtml}</td><td class="py-4 px-6 font-bold text-zinc-800">${UTIL.toTitleCase(capsterName)}</td><td class="py-4 px-6 font-bold text-blue-600 text-right">${UTIL.formatRp(capster.revenue)}</td></tr>`;
                 }).join('');
             }
