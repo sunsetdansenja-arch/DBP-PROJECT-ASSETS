@@ -195,12 +195,9 @@
 
     <div id="view-capster" class="h-full w-full hidden flex-col absolute inset-0 z-30 bg-[#F5F5F7] overflow-y-auto pb-10">
         <header class="glass-header px-6 py-4 flex justify-between items-center sticky top-0 z-40">
-            <div class="flex items-center gap-3">
-                <img id="capster-photo" src="https://raw.githubusercontent.com/sunsetdansenja-arch/DBP-PROJECT-ASSETS/main/LOGO%20DI%20BAWAH%20POHON.png" class="w-12 h-12 rounded-full object-cover border border-zinc-200 shadow-sm bg-white p-1">
-                <div>
-                    <p class="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Dompet Digital</p>
-                    <h1 id="capster-name" class="font-bold text-lg leading-none tracking-tight text-zinc-900 mt-0.5">Capster</h1>
-                </div>
+            <div>
+                <p class="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Dompet Digital</p>
+                <p class="font-bold text-sm text-zinc-900 mt-0.5">Barber Dashboard</p>
             </div>
             <button onclick="LOGIN_SYSTEM.logout()" class="btn-press bg-white border border-zinc-200 text-zinc-700 p-2.5 rounded-xl shadow-sm hover:bg-zinc-50 transition-all">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
@@ -209,6 +206,12 @@
 
         <main class="w-full max-w-md mx-auto p-5 space-y-6 animate-slide-up">
             
+            <div class="flex flex-col items-center justify-center pt-2 pb-4">
+                <img id="capster-photo-large" src="" onerror="this.src='https://raw.githubusercontent.com/sunsetdansenja-arch/DBP-PROJECT-ASSETS/main/LOGO%20DI%20BAWAH%20POHON.png'" class="w-28 h-28 rounded-full object-cover border-4 border-white shadow-xl mb-4 bg-zinc-100">
+                <p class="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">WELCOME TO DBP SYSTEM</p>
+                <h2 id="capster-name-welcome" class="font-black text-2xl text-zinc-900 tracking-tight mt-1 uppercase text-center leading-none">IGOY! 🚀</h2>
+            </div>
+
             <div class="bg-zinc-900 text-white rounded-[24px] p-6 shadow-xl relative overflow-hidden">
                 <div class="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full blur-2xl -mr-10 -mt-10 pointer-events-none"></div>
                 <div class="relative z-10">
@@ -241,7 +244,6 @@
                 <h3 class="text-xs font-bold text-zinc-400 uppercase tracking-widest mb-3 px-1">Riwayat Transparansi (Hari Ini)</h3>
                 <div id="capster-history" class="space-y-3"></div>
             </div>
-
         </main>
     </div>
 
@@ -524,7 +526,7 @@
             }
         };
 
-        // --- 4. CAPSTER LOGIC V7.0 (BULANAN + RANK) ---
+        // --- 4. CAPSTER LOGIC V7.0 (BULANAN + RANK + WELCOME) ---
         const CAPSTER_LOGIC = {
             init() {
                 this.loadData();
@@ -533,7 +535,6 @@
             async loadData(silent = false) {
                 if(!silent) UTIL.showLoading("Membuka Dompet...");
                 try {
-                    // FIX: Vercel sekarang mengirim branch juga supaya Rank bisa akurat per cabang
                     const res = await fetch(CONFIG.WEBHOOK_URL, { 
                         method: 'POST', headers: {'Content-Type': 'application/json'}, 
                         body: JSON.stringify({ action: 'get_capster_data', staff_id: STATE.user.staff_id, branch: STATE.user.branch }) 
@@ -544,10 +545,13 @@
                 } catch(e) {} finally { UTIL.hideLoading(); }
             },
             renderUI(data) {
-                document.getElementById('capster-name').innerText = UTIL.toTitleCase(data.profile.name);
-                document.getElementById('capster-photo').src = data.profile.photo;
+                // UPDATE FOTO DAN TEKS WELCOME DI TENGAH LAYAR
+                document.getElementById('capster-name-welcome').innerText = `${String(data.profile.name).toUpperCase()}! 🚀`;
                 
-                // UPDATE WALLET BULAN INI + RANK + HARI INI
+                // Tambahan fallback onerror biar kalau link githubnya rusak, ngga muncul logo pecah
+                const photoImg = document.getElementById('capster-photo-large');
+                photoImg.src = data.profile.photo;
+                
                 document.getElementById('capster-balance-month').innerText = UTIL.formatRp(data.stats.komisi_bulan_ini);
                 document.getElementById('capster-balance-today').innerText = UTIL.formatRp(data.stats.komisi_hari_ini);
                 document.getElementById('capster-rank').innerText = data.stats.rank;
