@@ -14,6 +14,7 @@
         body { font-family: 'Inter', sans-serif; background-color: #F5F5F7; color: #1D1D1F; -webkit-tap-highlight-color: transparent; overflow-x: hidden; }
         
         .apple-shadow { box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04); }
+        .apple-shadow-lg { box-shadow: 0 12px 48px rgba(0, 0, 0, 0.08); }
         .apple-card { background: #FFFFFF; border: 1px solid #E5E5EA; border-radius: 20px; }
         .glass-header { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); border-bottom: 1px solid #E5E5EA; }
         .btn-press:active { transform: scale(0.97); }
@@ -297,7 +298,7 @@
             init() {
                 document.getElementById('cashier-branch-name').innerText = STATE.user.branch; document.getElementById('report-branch-label').innerText = STATE.user.branch;
                 const now = new Date(); document.getElementById('report-month').value = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
-                this.loadData(); this.loadReportData(); STATE.syncInterval = setInterval(() => this.loadData(true), 120000);
+                this.loadData(); STATE.syncInterval = setInterval(() => this.loadData(true), 120000);
                 document.getElementById('cancel-confirm-text').addEventListener('input', function() {
                     const btn = document.getElementById('btn-submit-cancel');
                     if(this.value === 'YAKIN') { btn.disabled = false; btn.classList.remove('opacity-50', 'cursor-not-allowed'); } else { btn.disabled = true; btn.classList.add('opacity-50', 'cursor-not-allowed'); }
@@ -310,6 +311,7 @@
                 document.getElementById(`tab-${tab}`).classList.remove('hidden'); document.getElementById(`tab-btn-${tab}`).className = "px-6 py-2 rounded-lg text-sm font-bold bg-white shadow-sm text-zinc-900 transition-all";
                 if(tab === 'report') this.processReport();
             },
+            
             async loadData(silent = false) {
                 const sText = document.getElementById('sync-text'); const sIcon = document.getElementById('sync-icon');
                 if(sText) sText.innerText = "Syncing..."; if(sIcon) sIcon.classList.add('animate-spin');
@@ -317,16 +319,34 @@
                 try {
                     const res = await fetch(CONFIG.WEBHOOK_URL, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'get_cashier_data', branch: STATE.user.branch }) });
                     const data = await res.json(); const payload = data[0] || data;
-                    if (payload.success) { STATE.sysDates = payload.sys_dates; this.renderQueue(payload.queue || []); this.renderExpenses(payload.expenses || []); this.updateSummary(payload.queue, payload.expenses); }
+                    if (payload.success) { 
+                        STATE.sysDates = payload.sys_dates; 
+                        this.renderQueue(payload.queue || []); 
+                        this.renderExpenses(payload.expenses || []); 
+                        this.updateSummary(payload.queue, payload.expenses); 
+                    }
+                    
+                    // 🔥 THE ULTIMATE PATCH: SELALU TARIK DATA REPORT TERBARU DARI N8N
+                    await this.loadReportData();
+                    // Kalau tab report lagi kebuka, langsung refresh tabelnya otomatis
+                    if(!document.getElementById('tab-report').classList.contains('hidden')) {
+                        this.processReport();
+                    }
+
                 } catch (e) {} finally {
                     if(sText) sText.innerText = "Auto-Sync On"; if(sIcon) sIcon.classList.remove('animate-spin');
                     document.getElementById('queue-loading').style.display = 'none'; document.getElementById('expense-loading').style.display = 'none';
                 }
             },
+
             updateSummary(queue, expenses) {
                 let omset = 0; let exp = 0;
-                queue.forEach(q => { if(q.status === 'DONE' && UTIL.cleanDate(q.tanggal) === STATE.sysDates.today) omset += (Number(q.price)||0); });
-                expenses.forEach(e => { exp += (Number(e.nominal)||0); });
+                queue.forEach(q => { 
+                    if((q.status === 'DONE' || q.status === 'SUCCESS') && UTIL.cleanDate(q.tanggal) === STATE.sysDates.today) omset += (Number(q.price)||0); 
+                });
+                expenses.forEach(e => { 
+                    if(UTIL.cleanDate(e.tanggal) === STATE.sysDates.today) exp += (Number(e.nominal)||0); 
+                });
                 document.getElementById('sum-omset').innerText = UTIL.formatRp(omset); document.getElementById('sum-expense').innerText = UTIL.formatRp(exp); document.getElementById('sum-profit').innerText = UTIL.formatRp(omset - exp);
             },
             renderQueue(data) {
@@ -334,11 +354,13 @@
                 const byDate = { today: [], tomorrow: [], lusa: [] };
                 data.forEach(d => { const dt = UTIL.cleanDate(d.tanggal); if(dt === STATE.sysDates.today) byDate.today.push(d); else if(dt === STATE.sysDates.tomorrow) byDate.tomorrow.push(d); else if(dt === STATE.sysDates.lusa) byDate.lusa.push(d); });
 
-                const buildHtml = (title, items, isFuture) => {
+                const buildHtml = (title, items, isFuture, dateRaw) => {
                     if(items.length === 0) return ''; items.sort((a,b) => a.jam.localeCompare(b.jam));
                     let html = `<div class="mb-6"><h3 class="text-xs font-bold text-zinc-400 uppercase tracking-widest mb-3 pb-1 border-b border-zinc-200">${title}</h3><div class="space-y-3">`;
                     items.forEach(item => {
-                        const isDone = item.status === 'DONE'; const isPending = item.status === 'PENDING';
+                        const isDone = item.status === 'DONE' || item.status === 'SUCCESS'; 
+                        const isPending = item.status === 'PENDING';
+                        
                         const cName = item.caps_in_charge || item.capster_id || 'Barber'; const pName = item.package_name || item.package_id || 'Paket'; 
                         const waPhone = UTIL.formatWA(item.cust_phone);
 
@@ -349,7 +371,6 @@
                             const cBtn = `<button onclick="CASHIER_LOGIC.openCancelModal('${item.id}')" class="btn-press bg-white border border-red-200 text-red-600 px-3 py-2 rounded-lg text-[11px] font-bold hover:bg-red-50 transition-all">Cancel</button>`;
                             let waBtn = '';
                             if (isPending && waPhone) {
-                                // TEKS WA PERSIS SESUAI REQUEST (TETAP HARI INI)
                                 const bName = STATE.user.branch && STATE.user.branch.includes("BSD") ? "Di Bawah Pohon Barber & Shop BSD" : "Di Bawah Pohon Barber & Shop Kemang";
                                 const wTxt = `Halo kak, kami dari ${bName} ingin mengkonfirmasi bookingan nya untuk hari ini di jam ${item.jam} dengan barber ${cName} apakah jadi datang kak?\n\nApabila ada pembatalan atau penjadwalan ulang, bisa kita bantu dengan membalas pesan ini.\n\nFYI, untuk keterlambatan kami bisa tunggu maksimal sampai 5 menit ya, kak 🙏🏻 Terima kasih sebelumnya`;
                                 waBtn = `<a href="https://wa.me/${waPhone}?text=${encodeURIComponent(wTxt)}" target="_blank" class="btn-press bg-green-50 border border-green-200 text-green-600 px-3 py-2 rounded-lg text-[11px] font-bold hover:bg-green-100 flex items-center gap-1 transition-all">WA</a>`;
@@ -358,7 +379,6 @@
                             if(!isFuture) { 
                                 pBtn = isPending ? `<button onclick="CASHIER_LOGIC.updateStatus('${item.id}', 'ON DUTY')" class="btn-press bg-blue-600 text-white px-4 py-2 rounded-lg text-[11px] font-bold shadow-sm hover:bg-blue-700 transition-all">Mulai</button>` : `<button onclick="CASHIER_LOGIC.updateStatus('${item.id}', 'DONE')" class="btn-press bg-zinc-900 text-white px-4 py-2 rounded-lg text-[11px] font-bold shadow-sm hover:bg-zinc-800 transition-all">Selesai</button>`; 
                             } else { 
-                                // LOCKED BUTTON SEJAJAR
                                 pBtn = `<button disabled class="bg-transparent border border-transparent text-zinc-400 px-3 py-2 rounded-lg text-[11px] font-medium italic cursor-not-allowed">Locked</button>`; 
                             }
                             aBtns = `<div class="flex items-center gap-2 mt-3 sm:mt-0">${waBtn}${cBtn}${pBtn}</div>`;
@@ -370,7 +390,7 @@
                     return html + `</div></div>`;
                 };
                 
-                let finalHtml = buildHtml("HARI INI", byDate.today, false) + buildHtml(`BESOK (${UTIL.formatDateId(STATE.sysDates.tomorrow)})`, byDate.tomorrow, true) + buildHtml(`LUSA (${UTIL.formatDateId(STATE.sysDates.lusa)})`, byDate.lusa, true);
+                let finalHtml = buildHtml("HARI INI", byDate.today, false, STATE.sysDates.today) + buildHtml(`BESOK (${UTIL.formatDateId(STATE.sysDates.tomorrow)})`, byDate.tomorrow, true, STATE.sysDates.tomorrow) + buildHtml(`LUSA (${UTIL.formatDateId(STATE.sysDates.lusa)})`, byDate.lusa, true, STATE.sysDates.lusa);
                 if(!finalHtml) finalHtml = `<div class="text-center py-10 text-zinc-400 font-bold text-sm">Belum ada antrean.</div>`;
                 container.insertAdjacentHTML('beforeend', finalHtml);
             },
@@ -387,7 +407,14 @@
             closeExpenseModal() { document.getElementById('modal-expense').classList.replace('flex', 'hidden'); },
             async submitExpense() { const desc = document.getElementById('exp-deskripsi').value.trim(); const nom = document.getElementById('exp-nominal').value; if(!desc || !nom) return alert("Isi form lengkap!"); this.closeExpenseModal(); UTIL.showLoading("Menyimpan..."); try { await fetch(CONFIG.WEBHOOK_URL, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'add_expense', tanggal: STATE.sysDates.today, branch: STATE.user.branch, cashier_id: STATE.user.staff_id, kategori: document.getElementById('exp-kategori').value, deskripsi: desc, nominal: Number(nom) }) }); await this.loadData(true); } catch (e) { alert("Gagal Simpan"); } finally { UTIL.hideLoading(); } },
 
-            async loadReportData() { try { const res = await fetch(CONFIG.WEBHOOK_URL, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'get_cashier_report', branch: STATE.user.branch }) }); const data = await res.json(); if(data.success || data[0]?.success) STATE.rawReportData = data.bookings ? data : data[0]; } catch(e){} },
+            async loadReportData() { 
+                try { 
+                    const res = await fetch(CONFIG.WEBHOOK_URL, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'get_cashier_report', branch: STATE.user.branch }) }); 
+                    const data = await res.json(); 
+                    if(data.success || data[0]?.success) STATE.rawReportData = data.bookings ? data : data[0]; 
+                } catch(e){} 
+            },
+            
             processReport() {
                 if(!STATE.rawReportData) return; const month = document.getElementById('report-month').value; if(!month) return;
                 document.getElementById('report-month-label').innerText = "Bulan: " + month;
