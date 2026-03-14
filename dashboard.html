@@ -3,145 +3,204 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>DBP | System Access</title>
+    <title>DBP | Cashier System</title>
     <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/sunsetdansenja-arch/DBP-PROJECT-ASSETS/main/LOGO%20DI%20BAWAH%20POHON.png">
     
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #09090B; color: white; -webkit-tap-highlight-color: transparent; overflow-x: hidden; }
+        body { font-family: 'Inter', sans-serif; background-color: #F5F5F7; color: #1D1D1F; -webkit-tap-highlight-color: transparent; overflow-x: hidden; }
         
-        /* Brutalism Styles */
-        .brutal-border { border: 4px solid #3F3F46; }
-        .brutal-border-active { border: 4px solid #EA580C; }
-        .brutal-shadow { box-shadow: 6px 6px 0px 0px #EA580C; }
-        .brutal-shadow-zinc { box-shadow: 6px 6px 0px 0px #3F3F46; }
-        .hover-brutal:hover { transform: translate(-2px, -2px); box-shadow: 8px 8px 0px 0px #EA580C; }
-        .active-brutal:active { transform: translate(4px, 4px); box-shadow: 0px 0px 0px 0px #EA580C; }
-        .numpad-btn:active { transform: translate(4px, 4px); box-shadow: 0px 0px 0px 0px #EA580C; }
-
-        /* Scrollbar Apple Style */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #18181B; }
-        ::-webkit-scrollbar-thumb { background: #3F3F46; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #EA580C; }
+        /* Apple Elegant Styles */
+        .apple-shadow { box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04); }
+        .apple-card { background: #FFFFFF; border: 1px solid #E5E5EA; border-radius: 20px; }
+        .glass-header { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); border-bottom: 1px solid #E5E5EA; }
+        .btn-press:active { transform: scale(0.97); }
+        
+        /* Scrollbar Halus */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #D1D1D6; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #999999; }
 
         /* Animations */
-        @keyframes slideUpFade { 0% { opacity: 0; transform: translateY(30px); } 100% { opacity: 1; transform: translateY(0); } }
-        .animate-slide-up { animation: slideUpFade 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-        @keyframes shake { 0%, 100% { transform: translateX(0); } 20%, 60% { transform: translateX(-10px); } 40%, 80% { transform: translateX(10px); } }
-        .animate-shake { animation: shake 0.4s; }
-        @keyframes pulse-fast { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
-        .animate-pulse-fast { animation: pulse-fast 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+        @keyframes slideUp { 0% { opacity: 0; transform: translateY(20px); } 100% { opacity: 1; transform: translateY(0); } }
+        .animate-slide-up { animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        @keyframes pulse-dot { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+        .animate-pulse-dot { animation: pulse-dot 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
     </style>
 </head>
-<body class="h-screen w-screen overflow-hidden text-zinc-100">
+<body class="h-screen w-screen overflow-hidden text-zinc-900">
 
-    <div id="view-login" class="h-full w-full flex flex-col items-center justify-center px-6 absolute inset-0 z-40 bg-zinc-950 transition-all duration-700">
+    <div id="view-login" class="h-full w-full flex flex-col items-center justify-center px-6 absolute inset-0 z-40 bg-white transition-all duration-700">
         <div class="w-full max-w-sm flex flex-col items-center animate-slide-up">
-            <img src="https://raw.githubusercontent.com/sunsetdansenja-arch/DBP-PROJECT-ASSETS/main/LOGO%20DI%20BAWAH%20POHON.png" class="h-12 w-auto mb-8 bg-zinc-800 p-2 rounded-xl brutal-border" alt="Logo DBP">
-            <h1 class="font-black text-3xl tracking-tighter uppercase mb-2">System Access</h1>
-            <p class="text-xs font-black text-zinc-500 uppercase tracking-widest mb-10">Restricted Area</p>
+            <img src="https://raw.githubusercontent.com/sunsetdansenja-arch/DBP-PROJECT-ASSETS/main/LOGO%20DI%20BAWAH%20POHON.png" class="h-16 w-auto mb-6 opacity-90" alt="Logo DBP" style="filter: invert(1);">
+            <h1 class="font-bold text-2xl tracking-tight mb-1 text-zinc-900">System Access</h1>
+            <p class="text-xs font-medium text-zinc-400 uppercase tracking-widest mb-8">Authorized Personnel Only</p>
 
-            <div class="w-full bg-zinc-900 brutal-border rounded-3xl p-6 mb-8 text-center brutal-shadow">
-                <input type="text" id="userInput" placeholder="MASUKKAN STAFF ID" autocomplete="off" autocorrect="off" autocapitalize="characters" spellcheck="false"
-                    class="w-full bg-zinc-800 text-white font-black uppercase text-lg px-4 py-4 rounded-xl outline-none text-center mb-6 brutal-border focus:brutal-border-active transition-all placeholder-zinc-500">
+            <div class="w-full apple-card apple-shadow p-6 mb-8 text-center">
+                <input type="text" id="userInput" placeholder="STAFF ID" autocomplete="off" autocorrect="off" autocapitalize="characters" spellcheck="false"
+                    class="w-full bg-zinc-50 text-zinc-900 font-bold uppercase text-center text-lg px-4 py-4 rounded-2xl outline-none border border-zinc-200 focus:border-zinc-400 focus:bg-white transition-all mb-6 placeholder-zinc-400">
 
-                <p class="text-[10px] font-black text-zinc-500 mb-3 uppercase tracking-widest">Masukkan PIN Anda</p>
+                <p class="text-[10px] font-bold text-zinc-400 mb-3 uppercase tracking-widest">PIN CODE</p>
                 <div id="pin-dots" class="flex justify-center gap-4">
-                    <div class="w-4 h-4 rounded-full border-2 border-zinc-500 transition-all" id="dot-1"></div>
-                    <div class="w-4 h-4 rounded-full border-2 border-zinc-500 transition-all" id="dot-2"></div>
-                    <div class="w-4 h-4 rounded-full border-2 border-zinc-500 transition-all" id="dot-3"></div>
-                    <div class="w-4 h-4 rounded-full border-2 border-zinc-500 transition-all" id="dot-4"></div>
+                    <div class="w-3 h-3 rounded-full bg-zinc-200 transition-all" id="dot-1"></div>
+                    <div class="w-3 h-3 rounded-full bg-zinc-200 transition-all" id="dot-2"></div>
+                    <div class="w-3 h-3 rounded-full bg-zinc-200 transition-all" id="dot-3"></div>
+                    <div class="w-3 h-3 rounded-full bg-zinc-200 transition-all" id="dot-4"></div>
                 </div>
-                <p id="error-msg" class="text-red-500 font-black text-[10px] uppercase tracking-widest mt-4 opacity-0 transition-opacity">Akses Ditolak</p>
+                <p id="error-msg" class="text-red-500 font-bold text-xs mt-4 opacity-0 transition-opacity">Akses Ditolak</p>
             </div>
 
-            <div class="grid grid-cols-3 gap-4 w-full px-4">
+            <div class="grid grid-cols-3 gap-3 w-full px-4">
                 <script>
-                    for(let i=1; i<=9; i++) document.write(`<button onclick="LOGIN_SYSTEM.press('${i}')" class="numpad-btn bg-zinc-800 brutal-border rounded-2xl h-16 text-2xl font-black transition-all">${i}</button>`);
+                    for(let i=1; i<=9; i++) document.write(`<button onclick="LOGIN_SYSTEM.press('${i}')" class="btn-press bg-white border border-zinc-200 rounded-2xl h-14 text-xl font-medium text-zinc-700 shadow-sm transition-all hover:bg-zinc-50">${i}</button>`);
                 </script>
-                <button onclick="LOGIN_SYSTEM.press('clear')" class="numpad-btn bg-zinc-800 brutal-border rounded-2xl h-16 text-xs font-black uppercase text-zinc-500 tracking-widest transition-all">Del</button>
-                <button onclick="LOGIN_SYSTEM.press('0')" class="numpad-btn bg-zinc-800 brutal-border rounded-2xl h-16 text-2xl font-black transition-all">0</button>
-                <button disabled class="bg-transparent h-16"></button>
+                <button onclick="LOGIN_SYSTEM.press('clear')" class="btn-press bg-white border border-zinc-200 rounded-2xl h-14 text-xs font-bold uppercase text-zinc-400 shadow-sm transition-all hover:bg-zinc-50">Del</button>
+                <button onclick="LOGIN_SYSTEM.press('0')" class="btn-press bg-white border border-zinc-200 rounded-2xl h-14 text-xl font-medium text-zinc-700 shadow-sm transition-all hover:bg-zinc-50">0</button>
             </div>
         </div>
     </div>
 
-    <div id="view-cashier" class="h-full w-full hidden flex-col absolute inset-0 z-30 bg-zinc-900">
-        <header class="bg-zinc-950 border-b-4 border-zinc-800 p-4 flex justify-between items-center shrink-0">
+    <div id="view-cashier" class="h-full w-full hidden flex-col absolute inset-0 z-30 bg-[#F5F5F7]">
+        <header class="glass-header p-4 flex justify-between items-center shrink-0 z-20">
             <div class="flex items-center gap-4">
-                <img src="https://raw.githubusercontent.com/sunsetdansenja-arch/DBP-PROJECT-ASSETS/main/LOGO%20DI%20BAWAH%20POHON.png" class="h-8 bg-zinc-800 p-1 rounded-md brutal-border">
+                <img src="https://raw.githubusercontent.com/sunsetdansenja-arch/DBP-PROJECT-ASSETS/main/LOGO%20DI%20BAWAH%20POHON.png" class="h-10 opacity-90" style="filter: invert(1);">
                 <div>
-                    <h1 class="font-black tracking-tighter text-xl uppercase leading-none">Command Desk</h1>
-                    <p id="cashier-branch-name" class="text-[10px] font-black text-orange-500 uppercase tracking-widest">LOADING...</p>
+                    <h1 class="font-bold tracking-tight text-lg leading-none text-zinc-900">Cashier Terminal</h1>
+                    <p id="cashier-branch-name" class="text-[11px] font-semibold text-zinc-500 uppercase tracking-wide mt-1">LOADING...</p>
                 </div>
             </div>
-            <div class="flex gap-3">
-                <button onclick="CASHIER_LOGIC.loadData()" class="bg-zinc-800 text-white font-black text-xs px-4 py-2 rounded-xl brutal-border active-brutal transition-all uppercase tracking-widest flex items-center gap-2">
-                    <span id="sync-icon">🔄</span> SYNC DATA
+
+            <div class="hidden md:flex bg-zinc-100 p-1 rounded-xl border border-zinc-200">
+                <button onclick="CASHIER_LOGIC.switchTab('queue')" id="tab-btn-queue" class="px-6 py-2 rounded-lg text-sm font-bold bg-white shadow-sm text-zinc-900 transition-all">Live Queue</button>
+                <button onclick="CASHIER_LOGIC.switchTab('report')" id="tab-btn-report" class="px-6 py-2 rounded-lg text-sm font-semibold text-zinc-500 hover:text-zinc-900 transition-all">Reports</button>
+            </div>
+
+            <div class="flex gap-4 items-center">
+                <div class="flex items-center gap-2 text-[10px] font-bold text-zinc-400 uppercase tracking-widest">
+                    <div id="sync-indicator" class="w-2 h-2 rounded-full bg-green-500 animate-pulse-dot"></div>
+                    <span id="sync-text">Auto-Sync On</span>
+                </div>
+                <button onclick="CASHIER_LOGIC.loadData()" class="btn-press bg-white border border-zinc-200 text-zinc-700 p-2 rounded-xl shadow-sm hover:bg-zinc-50">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
                 </button>
-                <button onclick="LOGIN_SYSTEM.logout()" class="bg-red-600 text-white font-black text-xs px-4 py-2 rounded-xl brutal-border active-brutal transition-all uppercase tracking-widest">
-                    LOGOUT
-                </button>
+                <button onclick="LOGIN_SYSTEM.logout()" class="btn-press bg-zinc-900 text-white font-semibold text-xs px-4 py-2 rounded-xl shadow-md hover:bg-zinc-800 transition-all">Logout</button>
             </div>
         </header>
 
-        <main class="flex-1 overflow-hidden flex flex-col lg:flex-row p-4 gap-4">
-            
-            <section class="flex-1 bg-zinc-950 brutal-border rounded-3xl flex flex-col overflow-hidden">
-                <div class="p-4 border-b-4 border-zinc-800 flex justify-between items-end bg-zinc-900">
-                    <div>
-                        <h2 class="font-black text-2xl tracking-tighter uppercase">Live Queue</h2>
-                        <p class="text-xs font-black text-zinc-500 uppercase tracking-widest">Antrean Eksekusi Hari Ini</p>
-                    </div>
-                    <div class="bg-orange-600 px-3 py-1 rounded-lg text-xs font-black brutal-border">
-                        <span id="queue-count">0</span> WAITING
+        <main id="tab-queue" class="flex-1 overflow-hidden flex flex-col lg:flex-row p-4 gap-4 animate-slide-up">
+            <section class="flex-1 apple-card apple-shadow flex flex-col overflow-hidden">
+                <div class="p-5 border-b border-zinc-100 flex justify-between items-center bg-white rounded-t-[20px]">
+                    <h2 class="font-bold text-xl tracking-tight text-zinc-800">Antrean Hari Ini</h2>
+                    <div class="bg-zinc-100 text-zinc-600 px-3 py-1.5 rounded-lg text-xs font-bold border border-zinc-200">
+                        <span id="queue-count">0</span> PENDING
                     </div>
                 </div>
-                <div id="queue-container" class="flex-1 overflow-y-auto p-4 space-y-4">
-                    <div id="queue-loading" class="w-full bg-zinc-900 brutal-border rounded-2xl p-6 animate-pulse-fast flex justify-between items-center">
-                        <div class="space-y-3 w-1/2">
-                            <div class="h-6 bg-zinc-800 rounded w-3/4"></div>
-                            <div class="h-4 bg-zinc-800 rounded w-1/2"></div>
-                        </div>
-                        <div class="h-10 bg-zinc-800 rounded w-1/4"></div>
+                <div id="queue-container" class="flex-1 overflow-y-auto p-5 space-y-4 bg-zinc-50/50">
+                    <div id="queue-loading" class="w-full bg-white border border-zinc-100 rounded-2xl p-6 animate-pulse flex justify-between items-center">
+                        <div class="space-y-3 w-1/2"><div class="h-5 bg-zinc-200 rounded w-3/4"></div><div class="h-3 bg-zinc-100 rounded w-1/2"></div></div>
+                        <div class="h-10 bg-zinc-200 rounded-xl w-1/4"></div>
                     </div>
-                    </div>
+                </div>
             </section>
 
             <section class="w-full lg:w-96 flex flex-col gap-4">
-                
-                <button onclick="CASHIER_LOGIC.openExpenseModal()" class="w-full bg-orange-600 text-zinc-950 font-black text-lg py-5 rounded-3xl brutal-border brutal-shadow hover-brutal transition-all uppercase tracking-widest flex justify-center items-center gap-2 shrink-0">
-                    <span>[-] CATAT PENGELUARAN</span>
+                <button onclick="CASHIER_LOGIC.openExpenseModal()" class="btn-press w-full bg-zinc-900 text-white font-bold text-sm py-5 rounded-2xl shadow-md hover:bg-zinc-800 transition-all flex justify-center items-center gap-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                    Catat Pengeluaran
                 </button>
 
-                <div class="flex-1 bg-zinc-950 brutal-border rounded-3xl flex flex-col overflow-hidden">
-                    <div class="p-4 border-b-4 border-zinc-800 bg-zinc-900">
-                        <h2 class="font-black text-xl tracking-tighter uppercase">Petty Cash</h2>
-                        <p class="text-[10px] font-black text-zinc-500 uppercase tracking-widest">Log Pengeluaran Hari Ini</p>
+                <div class="flex-1 apple-card apple-shadow flex flex-col overflow-hidden">
+                    <div class="p-5 border-b border-zinc-100 bg-white rounded-t-[20px]">
+                        <h2 class="font-bold text-lg tracking-tight text-zinc-800">Petty Cash</h2>
+                        <p class="text-[10px] font-semibold text-zinc-400 uppercase mt-1">Pengeluaran Hari Ini</p>
                     </div>
-                    <div id="expense-container" class="flex-1 overflow-y-auto p-4 space-y-3">
-                        <div id="expense-loading" class="w-full bg-zinc-900 brutal-border rounded-xl p-4 animate-pulse-fast h-16"></div>
-                        </div>
-                    <div class="p-4 border-t-4 border-zinc-800 bg-zinc-900 flex justify-between items-center">
-                        <span class="text-xs font-black text-zinc-500 uppercase tracking-widest">Total Keluar:</span>
-                        <span id="expense-total" class="font-black text-xl text-orange-500">Rp 0</span>
+                    <div id="expense-container" class="flex-1 overflow-y-auto p-4 space-y-3 bg-zinc-50/50">
+                        <div id="expense-loading" class="w-full bg-white border border-zinc-100 rounded-xl p-4 animate-pulse h-16"></div>
+                    </div>
+                    <div class="p-5 border-t border-zinc-100 bg-white rounded-b-[20px] flex justify-between items-center">
+                        <span class="text-xs font-bold text-zinc-400 uppercase tracking-wider">Total Keluar</span>
+                        <span id="expense-total" class="font-bold text-lg text-zinc-900">Rp 0</span>
                     </div>
                 </div>
             </section>
         </main>
+
+        <main id="tab-report" class="flex-1 overflow-hidden flex flex-col p-4 md:p-8 hidden animate-slide-up">
+            <div class="max-w-5xl w-full mx-auto flex flex-col h-full gap-6">
+                
+                <div class="flex flex-col sm:flex-row justify-between items-end gap-4 bg-white p-5 rounded-2xl apple-shadow border border-zinc-200">
+                    <div>
+                        <label class="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-2 block">Pilih Bulan Laporan</label>
+                        <input type="month" id="report-month" onchange="CASHIER_LOGIC.processReport()" class="bg-zinc-50 border border-zinc-200 text-zinc-800 font-semibold px-4 py-2 rounded-xl outline-none focus:border-zinc-400">
+                    </div>
+                    <div class="flex gap-2">
+                        <button onclick="CASHIER_LOGIC.exportCSV()" class="btn-press bg-green-50 text-green-700 border border-green-200 px-4 py-2.5 rounded-xl text-sm font-bold flex items-center gap-2 hover:bg-green-100">
+                            Unduh CSV
+                        </button>
+                        <button onclick="CASHIER_LOGIC.exportPDF()" class="btn-press bg-zinc-900 text-white px-4 py-2.5 rounded-xl text-sm font-bold flex items-center gap-2 shadow-md hover:bg-zinc-800">
+                            Cetak PDF
+                        </button>
+                    </div>
+                </div>
+
+                <div id="printable-report" class="flex-1 flex flex-col overflow-hidden bg-white rounded-2xl apple-shadow border border-zinc-200">
+                    <div class="p-6 border-b border-zinc-100 flex justify-between items-center bg-zinc-50 rounded-t-[20px]">
+                        <div>
+                            <h2 class="font-bold text-xl text-zinc-900">Laporan Keuangan Kasir</h2>
+                            <p id="report-branch-label" class="text-xs font-semibold text-zinc-500 mt-1">DBP Cabang...</p>
+                        </div>
+                        <div class="text-right">
+                            <p id="report-month-label" class="font-bold text-lg text-zinc-800">Bulan...</p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-3 gap-4 p-6 border-b border-zinc-100">
+                        <div class="bg-zinc-50 p-4 rounded-xl border border-zinc-100">
+                            <p class="text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1">Total Transaksi</p>
+                            <p id="rep-total-trx" class="font-bold text-2xl text-zinc-900">0</p>
+                        </div>
+                        <div class="bg-blue-50 p-4 rounded-xl border border-blue-100">
+                            <p class="text-[10px] font-bold text-blue-500 uppercase tracking-wider mb-1">Gross Revenue (Kotor)</p>
+                            <p id="rep-total-revenue" class="font-bold text-2xl text-blue-700">Rp 0</p>
+                        </div>
+                        <div class="bg-red-50 p-4 rounded-xl border border-red-100">
+                            <p class="text-[10px] font-bold text-red-500 uppercase tracking-wider mb-1">Total Pengeluaran</p>
+                            <p id="rep-total-expense" class="font-bold text-2xl text-red-700">Rp 0</p>
+                        </div>
+                    </div>
+
+                    <div class="flex-1 overflow-y-auto p-0">
+                        <table class="w-full text-left border-collapse">
+                            <thead class="bg-zinc-50 sticky top-0 border-b border-zinc-200">
+                                <tr>
+                                    <th class="p-4 text-xs font-bold text-zinc-500 uppercase">Tanggal</th>
+                                    <th class="p-4 text-xs font-bold text-zinc-500 uppercase text-center">Jml Cukur</th>
+                                    <th class="p-4 text-xs font-bold text-zinc-500 uppercase text-right">Pemasukan</th>
+                                    <th class="p-4 text-xs font-bold text-zinc-500 uppercase text-right">Pengeluaran</th>
+                                </tr>
+                            </thead>
+                            <tbody id="report-table-body" class="divide-y divide-zinc-100 text-sm">
+                                <tr><td colspan="4" class="p-8 text-center text-zinc-400">Pilih bulan dan tunggu data dimuat...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
     </div>
 
-    <div id="modal-expense" class="fixed inset-0 z-50 bg-zinc-950/80 backdrop-blur-sm hidden flex-col items-center justify-center p-4">
-        <div class="bg-zinc-900 w-full max-w-sm rounded-[32px] p-6 sm:p-8 brutal-border brutal-shadow animate-slide-up">
-            <h2 class="font-black text-2xl mb-1 tracking-tighter uppercase text-white border-b-4 border-zinc-700 pb-2">Input Pengeluaran</h2>
-            
-            <div class="space-y-4 mt-6">
+    <div id="modal-expense" class="fixed inset-0 z-50 bg-zinc-900/40 backdrop-blur-sm hidden flex-col items-center justify-center p-4">
+        <div class="bg-white w-full max-w-sm rounded-[24px] p-6 shadow-2xl animate-slide-up border border-zinc-100">
+            <h2 class="font-bold text-xl mb-6 text-zinc-900">Input Pengeluaran</h2>
+            <div class="space-y-4">
                 <div>
-                    <label class="text-[10px] font-black text-zinc-400 uppercase tracking-widest">Kategori</label>
-                    <select id="exp-kategori" class="w-full bg-zinc-800 text-white font-black uppercase text-sm px-4 py-3 rounded-xl outline-none border-2 border-zinc-700 mt-1">
+                    <label class="text-xs font-bold text-zinc-500 mb-1 block">Kategori</label>
+                    <select id="exp-kategori" class="w-full bg-zinc-50 text-zinc-900 font-semibold text-sm px-4 py-3 rounded-xl outline-none border border-zinc-200 focus:border-zinc-400">
                         <option value="OPERASIONAL">Operasional</option>
                         <option value="KONSUMSI">Konsumsi</option>
                         <option value="MAINTENANCE">Maintenance</option>
@@ -149,58 +208,83 @@
                     </select>
                 </div>
                 <div>
-                    <label class="text-[10px] font-black text-zinc-400 uppercase tracking-widest">Deskripsi Item</label>
-                    <input type="text" id="exp-deskripsi" placeholder="Contoh: Beli Silet / Galon" class="w-full bg-zinc-800 text-white font-black uppercase text-sm px-4 py-3 rounded-xl outline-none border-2 border-zinc-700 mt-1 placeholder-zinc-600">
+                    <label class="text-xs font-bold text-zinc-500 mb-1 block">Deskripsi</label>
+                    <input type="text" id="exp-deskripsi" placeholder="Contoh: Beli Kopi" class="w-full bg-zinc-50 text-zinc-900 font-semibold text-sm px-4 py-3 rounded-xl outline-none border border-zinc-200 focus:border-zinc-400">
                 </div>
                 <div>
-                    <label class="text-[10px] font-black text-zinc-400 uppercase tracking-widest">Nominal (Rp)</label>
-                    <input type="number" id="exp-nominal" placeholder="0" class="w-full bg-zinc-800 text-orange-500 font-black uppercase text-xl px-4 py-3 rounded-xl outline-none border-2 border-zinc-700 mt-1 placeholder-zinc-600">
+                    <label class="text-xs font-bold text-zinc-500 mb-1 block">Nominal (Rp)</label>
+                    <input type="number" id="exp-nominal" placeholder="0" class="w-full bg-zinc-50 text-zinc-900 font-bold text-lg px-4 py-3 rounded-xl outline-none border border-zinc-200 focus:border-zinc-400">
                 </div>
-                
-                <div class="flex gap-2 pt-4">
-                    <button onclick="CASHIER_LOGIC.closeExpenseModal()" class="w-1/3 bg-zinc-700 text-white py-4 rounded-[16px] font-black uppercase tracking-widest brutal-border active-brutal transition-all">Batal</button>
-                    <button id="btn-submit-exp" onclick="CASHIER_LOGIC.submitExpense()" class="w-2/3 bg-orange-600 text-white py-4 rounded-[16px] font-black uppercase tracking-widest brutal-border brutal-shadow-sm active-brutal transition-all">SIMPAN</button>
+                <div class="flex gap-3 pt-4">
+                    <button onclick="CASHIER_LOGIC.closeExpenseModal()" class="btn-press flex-1 bg-zinc-100 text-zinc-600 py-3.5 rounded-xl font-bold text-sm hover:bg-zinc-200 transition-all">Batal</button>
+                    <button id="btn-submit-exp" onclick="CASHIER_LOGIC.submitExpense()" class="btn-press flex-1 bg-zinc-900 text-white py-3.5 rounded-xl font-bold text-sm shadow-md hover:bg-zinc-800 transition-all">Simpan</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <div id="loading-overlay" class="fixed inset-0 bg-zinc-950/90 hidden flex-col items-center justify-center z-[100]">
-        <div class="w-12 h-12 border-4 border-orange-600 border-t-transparent rounded-full animate-spin mb-4"></div>
-        <h2 id="loading-text" class="font-black text-orange-600 tracking-widest uppercase text-sm">Memproses...</h2>
+    <div id="modal-cancel" class="fixed inset-0 z-50 bg-zinc-900/40 backdrop-blur-sm hidden flex-col items-center justify-center p-4">
+        <div class="bg-white w-full max-w-sm rounded-[24px] p-6 shadow-2xl animate-slide-up border border-red-100">
+            <div class="w-12 h-12 rounded-full bg-red-100 text-red-600 flex items-center justify-center mb-4">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+            </div>
+            <h2 class="font-bold text-xl text-zinc-900 mb-2">Batalkan Booking?</h2>
+            <p class="text-sm text-zinc-500 mb-6 leading-relaxed">Booking ini akan dihapus dari antrean dan jadwal akan dikosongkan. Ketik <span class="font-black text-red-600">YAKIN</span> untuk melanjutkan.</p>
+            
+            <input type="text" id="cancel-confirm-text" placeholder="Ketik YAKIN" class="w-full bg-zinc-50 text-center text-red-600 font-black tracking-widest text-lg px-4 py-3 rounded-xl outline-none border border-red-200 focus:border-red-400 mb-4">
+            
+            <div class="flex gap-3">
+                <button onclick="CASHIER_LOGIC.closeCancelModal()" class="btn-press flex-1 bg-zinc-100 text-zinc-600 py-3.5 rounded-xl font-bold text-sm hover:bg-zinc-200 transition-all">Kembali</button>
+                <button id="btn-submit-cancel" onclick="CASHIER_LOGIC.processCancel()" class="btn-press flex-1 bg-red-600 text-white py-3.5 rounded-xl font-bold text-sm shadow-md hover:bg-red-700 transition-all opacity-50 cursor-not-allowed" disabled>Batalkan</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="loading-overlay" class="fixed inset-0 bg-white/80 backdrop-blur-sm hidden flex-col items-center justify-center z-[100]">
+        <div class="w-10 h-10 border-4 border-zinc-200 border-t-zinc-900 rounded-full animate-spin mb-4"></div>
+        <h2 id="loading-text" class="font-bold text-zinc-800 tracking-wide text-sm">Memproses...</h2>
     </div>
 
     <script>
+        // Ganti dengan URL Prod Lo (Pastikan sama dengan n8n Pintu 2)
         const CONFIG = {
             WEBHOOK_URL: 'https://n8n-mzbmiib3etk4.kangkung.sumopod.my.id/webhook/a6512d05-a51a-4289-9063-9a4f17ac745a' 
         };
 
         const STATE = {
-            user: null
+            user: null,
+            cancelTargetId: null,
+            syncInterval: null,
+            rawReportData: null
         };
 
-        // --- 1. LOGIN & ROUTING SYSTEM ---
+        const UTIL = {
+            formatRp: (num) => 'Rp ' + Number(num || 0).toLocaleString('id-ID'),
+            cleanDate: (dateStr) => String(dateStr || "").substring(0, 10),
+            showLoading: (text) => {
+                document.getElementById('loading-text').innerText = text || "Memproses...";
+                document.getElementById('loading-overlay').classList.replace('hidden', 'flex');
+            },
+            hideLoading: () => {
+                document.getElementById('loading-overlay').classList.replace('flex', 'hidden');
+            }
+        };
+
+        // --- 1. LOGIN SYSTEM ---
         const LOGIN_SYSTEM = {
             pin: "",
-            
             init() {
-                // Cek apakah ada session aktif
                 const savedUser = localStorage.getItem('dbp_user');
                 if (savedUser) {
                     STATE.user = JSON.parse(savedUser);
                     this.routeUser();
                 }
-                
-                document.getElementById('userInput').addEventListener('input', function(e) {
-                    this.value = this.value.toUpperCase();
-                });
+                document.getElementById('userInput').addEventListener('input', function() { this.value = this.value.toUpperCase(); });
             },
-
             routeUser() {
                 if (!STATE.user) return;
-                
                 const role = STATE.user.role;
-                document.getElementById('view-login').style.transform = 'translateY(-100%)';
+                document.getElementById('view-login').style.opacity = '0';
                 
                 setTimeout(() => {
                     document.getElementById('view-login').classList.add('hidden');
@@ -209,58 +293,37 @@
                         document.getElementById('view-cashier').classList.add('flex');
                         CASHIER_LOGIC.init();
                     } else {
-                        alert(`DASHBOARD ${role} SEDANG DIBANGUN OLEH DEVELOPER.\nSilakan Logout.`);
-                        document.getElementById('view-login').style.transform = 'translateY(0)';
+                        alert(`DASHBOARD ${role} DALAM PENGEMBANGAN.\nSilakan Logout.`);
+                        document.getElementById('view-login').style.opacity = '1';
                         document.getElementById('view-login').classList.remove('hidden');
                     }
-                }, 700);
+                }, 400);
             },
-
             press(val) {
-                const errorMsg = document.getElementById('error-msg');
-                errorMsg.style.opacity = '0';
-                
-                if (val === 'clear') { this.pin = this.pin.slice(0, -1); } 
-                else { if (this.pin.length < 4) this.pin += val; }
+                document.getElementById('error-msg').style.opacity = '0';
+                if (val === 'clear') this.pin = this.pin.slice(0, -1);
+                else if (this.pin.length < 4) this.pin += val;
                 
                 this.updateDots();
                 if (this.pin.length === 4) setTimeout(() => this.submit(), 200);
             },
-
             updateDots() {
                 for (let i = 1; i <= 4; i++) {
                     const dot = document.getElementById(`dot-${i}`);
-                    if (i <= this.pin.length) {
-                        dot.classList.add('bg-orange-500', 'border-orange-500');
-                        dot.classList.remove('border-zinc-500', 'bg-transparent');
-                    } else {
-                        dot.classList.remove('bg-orange-500', 'border-orange-500');
-                        dot.classList.add('border-zinc-500', 'bg-transparent');
-                    }
+                    if (i <= this.pin.length) dot.classList.replace('bg-zinc-200', 'bg-zinc-800');
+                    else dot.classList.replace('bg-zinc-800', 'bg-zinc-200');
                 }
             },
-
             async submit() {
-                const username = document.getElementById('userInput').value.trim().toUpperCase(); 
-                const errorMsg = document.getElementById('error-msg');
-
-                if (!username) {
-                    errorMsg.innerText = "ISI STAFF ID DULU BOS";
-                    errorMsg.style.opacity = '1';
-                    this.triggerError();
-                    return;
-                }
-
-                document.getElementById('loading-overlay').classList.remove('hidden');
-                document.getElementById('loading-overlay').classList.add('flex');
+                const username = document.getElementById('userInput').value.trim(); 
+                if (!username) { this.triggerError("ISI STAFF ID"); return; }
+                UTIL.showLoading("Verifikasi...");
 
                 try {
                     const res = await fetch(CONFIG.WEBHOOK_URL, {
-                        method: 'POST',
-                        headers: {'Content-Type': 'application/json'},
+                        method: 'POST', headers: {'Content-Type': 'application/json'},
                         body: JSON.stringify({ action: 'login', username: username, password: this.pin })
                     });
-                    
                     const data = await res.json();
                     const isSuccess = data.success || (Array.isArray(data) && data[0] && data[0].success);
                     
@@ -268,34 +331,23 @@
                         STATE.user = data.user || data[0].user;
                         localStorage.setItem('dbp_user', JSON.stringify(STATE.user));
                         this.routeUser();
-                    } else {
-                        throw new Error("Invalid Auth");
-                    }
+                    } else throw new Error("Invalid");
                 } catch (e) {
-                    this.triggerError();
+                    this.triggerError("AKSES DITOLAK");
                 } finally {
-                    document.getElementById('loading-overlay').classList.add('hidden');
-                    document.getElementById('loading-overlay').classList.remove('flex');
+                    UTIL.hideLoading();
                     document.getElementById('userInput').value = "";
-                    this.pin = "";
-                    this.updateDots();
+                    this.pin = ""; this.updateDots();
                 }
             },
-
-            triggerError() {
-                this.pin = "";
-                this.updateDots();
-                const container = document.getElementById('pin-dots').parentElement;
-                container.classList.add('animate-shake');
-                document.getElementById('error-msg').innerText = "AKSES DITOLAK";
+            triggerError(msg) {
+                this.pin = ""; this.updateDots();
+                document.getElementById('error-msg').innerText = msg;
                 document.getElementById('error-msg').style.opacity = '1';
-                setTimeout(() => container.classList.remove('animate-shake'), 400);
             },
-
             logout() {
                 localStorage.removeItem('dbp_user');
-                STATE.user = null;
-                location.reload(); // Hard reset UI
+                location.reload(); 
             }
         };
 
@@ -303,23 +355,61 @@
         const CASHIER_LOGIC = {
             init() {
                 document.getElementById('cashier-branch-name').innerText = STATE.user.branch;
+                document.getElementById('report-branch-label').innerText = STATE.user.branch;
+                
+                // Set default month ke bulan ini
+                const now = new Date();
+                document.getElementById('report-month').value = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+
                 this.loadData();
+                this.loadReportData(); // Pre-load report data
+
+                // Auto-sync setiap 2 Menit (120.000 ms)
+                STATE.syncInterval = setInterval(() => {
+                    this.loadData(true); // silent = true
+                }, 120000);
+
+                // Listener Modal Cancel
+                document.getElementById('cancel-confirm-text').addEventListener('input', function(e) {
+                    const btn = document.getElementById('btn-submit-cancel');
+                    if(this.value === 'YAKIN') {
+                        btn.disabled = false; btn.classList.remove('opacity-50', 'cursor-not-allowed');
+                    } else {
+                        btn.disabled = true; btn.classList.add('opacity-50', 'cursor-not-allowed');
+                    }
+                });
             },
 
-            async loadData() {
-                const syncIcon = document.getElementById('sync-icon');
-                syncIcon.classList.add('animate-spin');
-                
-                document.getElementById('queue-loading').style.display = 'flex';
-                document.getElementById('expense-loading').style.display = 'block';
+            switchTab(tab) {
+                document.getElementById('tab-queue').classList.add('hidden');
+                document.getElementById('tab-report').classList.add('hidden');
+                document.getElementById('tab-btn-queue').classList.replace('bg-white', 'text-zinc-500');
+                document.getElementById('tab-btn-queue').classList.remove('shadow-sm', 'text-zinc-900');
+                document.getElementById('tab-btn-report').classList.replace('bg-white', 'text-zinc-500');
+                document.getElementById('tab-btn-report').classList.remove('shadow-sm', 'text-zinc-900');
+
+                document.getElementById(`tab-${tab}`).classList.remove('hidden');
+                document.getElementById(`tab-btn-${tab}`).classList.add('bg-white', 'shadow-sm', 'text-zinc-900');
+                document.getElementById(`tab-btn-${tab}`).classList.remove('text-zinc-500');
+
+                if(tab === 'report') this.processReport();
+            },
+
+            async loadData(silent = false) {
+                const syncText = document.getElementById('sync-text');
+                const indicator = document.getElementById('sync-indicator');
+                syncText.innerText = "Syncing..."; indicator.classList.replace('bg-green-500', 'bg-orange-500');
+
+                if(!silent) {
+                    document.getElementById('queue-loading').style.display = 'flex';
+                    document.getElementById('expense-loading').style.display = 'block';
+                }
 
                 try {
                     const res = await fetch(CONFIG.WEBHOOK_URL, {
-                        method: 'POST',
-                        headers: {'Content-Type': 'application/json'},
+                        method: 'POST', headers: {'Content-Type': 'application/json'},
                         body: JSON.stringify({ action: 'get_cashier_data', branch: STATE.user.branch })
                     });
-                    
                     const rawData = await res.json();
                     const payload = Array.isArray(rawData) ? rawData[0] : rawData;
 
@@ -328,9 +418,9 @@
                         this.renderExpenses(payload.expenses || []);
                     }
                 } catch (e) {
-                    alert("Gagal sinkronisasi data dengan server.");
+                    console.error("Sync Error");
                 } finally {
-                    syncIcon.classList.remove('animate-spin');
+                    syncText.innerText = "Auto-Sync On"; indicator.classList.replace('bg-orange-500', 'bg-green-500');
                     document.getElementById('queue-loading').style.display = 'none';
                     document.getElementById('expense-loading').style.display = 'none';
                 }
@@ -338,38 +428,51 @@
 
             renderQueue(data) {
                 const container = document.getElementById('queue-container');
-                // Hapus semua isi kecuali SKELETON (biar bisa dipake lagi)
-                Array.from(container.children).forEach(c => {
-                    if(c.id !== 'queue-loading') c.remove();
-                });
+                Array.from(container.children).forEach(c => { if(c.id !== 'queue-loading') c.remove(); });
 
-                // Tampilkan yang belum DONE saja (PENDING / ON DUTY)
-                const activeQueue = data.filter(d => d.status !== 'DONE').sort((a,b) => a.jam.localeCompare(b.jam));
-                document.getElementById('queue-count').innerText = activeQueue.length;
+                // Sortir berdasar jam, abaikan yang RESCHEDULE
+                const validQueue = data.filter(d => d.status !== 'RESCHEDULE').sort((a,b) => a.jam.localeCompare(b.jam));
+                const pendingCount = validQueue.filter(d => d.status !== 'DONE').length;
+                document.getElementById('queue-count').innerText = pendingCount;
 
-                if (activeQueue.length === 0) {
-                    container.insertAdjacentHTML('beforeend', `<div class="text-center py-10 text-zinc-600 font-black uppercase tracking-widest text-xs">Kosong. Waktunya ngopi ☕</div>`);
+                if (validQueue.length === 0) {
+                    container.insertAdjacentHTML('beforeend', `<div class="text-center py-10 text-zinc-400 font-bold text-sm">Belum ada antrean hari ini.</div>`);
                     return;
                 }
 
-                activeQueue.forEach(item => {
+                validQueue.forEach(item => {
+                    const isDone = item.status === 'DONE';
                     const isPending = item.status === 'PENDING';
-                    const statusColor = isPending ? 'bg-zinc-700 text-zinc-300' : 'bg-orange-600 text-white';
-                    const btnAction = isPending 
-                        ? `<button onclick="CASHIER_LOGIC.updateStatus('${item.id}', 'ON DUTY')" class="w-full sm:w-auto bg-zinc-800 text-white border-2 border-zinc-600 px-6 py-4 rounded-xl font-black uppercase text-xs active-brutal transition-all mt-3 sm:mt-0">Mulai (ON DUTY)</button>`
-                        : `<button onclick="CASHIER_LOGIC.updateStatus('${item.id}', 'DONE')" class="w-full sm:w-auto bg-orange-500 text-zinc-950 px-6 py-4 rounded-xl brutal-border brutal-shadow-sm active-brutal transition-all mt-3 sm:mt-0 font-black uppercase text-xs hover-brutal">Selesaikan (DONE)</button>`;
+                    
+                    let statusBadge = '';
+                    if (isDone) statusBadge = `<span class="text-[10px] font-bold uppercase px-2 py-1 rounded bg-green-100 text-green-700">✓ Selesai</span>`;
+                    else if (isPending) statusBadge = `<span class="text-[10px] font-bold uppercase px-2 py-1 rounded bg-zinc-100 text-zinc-500">Pending</span>`;
+                    else statusBadge = `<span class="text-[10px] font-bold uppercase px-2 py-1 rounded bg-blue-100 text-blue-700">On Duty</span>`;
+
+                    let actionBtns = '';
+                    if (!isDone) {
+                        const primaryBtn = isPending 
+                            ? `<button onclick="CASHIER_LOGIC.updateStatus('${item.id}', 'ON DUTY')" class="btn-press bg-blue-600 text-white px-4 py-2 rounded-lg text-xs font-bold shadow-sm hover:bg-blue-700">Mulai</button>`
+                            : `<button onclick="CASHIER_LOGIC.updateStatus('${item.id}', 'DONE')" class="btn-press bg-zinc-900 text-white px-4 py-2 rounded-lg text-xs font-bold shadow-sm hover:bg-zinc-800">Selesai</button>`;
+                        
+                        const cancelBtn = isPending ? `<button onclick="CASHIER_LOGIC.openCancelModal('${item.id}')" class="btn-press bg-white border border-red-200 text-red-600 px-3 py-2 rounded-lg text-xs font-bold hover:bg-red-50">Cancel</button>` : '';
+                        
+                        actionBtns = `<div class="flex gap-2 mt-3 sm:mt-0">${cancelBtn}${primaryBtn}</div>`;
+                    }
+
+                    const cardClass = isDone ? "bg-zinc-50 opacity-70" : "bg-white apple-shadow";
 
                     const html = `
-                    <div class="bg-zinc-900 brutal-border rounded-2xl p-5 flex flex-col sm:flex-row justify-between items-start sm:items-center">
+                    <div class="${cardClass} border border-zinc-200 rounded-[16px] p-5 flex flex-col sm:flex-row justify-between items-start sm:items-center transition-all">
                         <div>
-                            <div class="flex items-center gap-3 mb-2">
-                                <span class="text-lg font-black text-white">${item.jam}</span>
-                                <span class="text-[9px] font-black uppercase tracking-widest px-2 py-1 rounded-md ${statusColor}">${item.status}</span>
+                            <div class="flex items-center gap-3 mb-1">
+                                <span class="text-lg font-bold text-zinc-900">${item.jam}</span>
+                                ${statusBadge}
                             </div>
-                            <h3 class="font-black text-xl text-white uppercase tracking-tighter leading-none mb-1">${item.cust_name || 'GUEST'}</h3>
-                            <p class="text-xs font-bold text-zinc-500 uppercase tracking-widest">Capster: <span class="text-orange-500">${item.capster_id || '-'}</span> | Rp ${(item.price || 0).toLocaleString('id-ID')}</p>
+                            <h3 class="font-bold text-lg text-zinc-800 tracking-tight leading-none mb-1.5">${item.cust_name || 'Walk-In Guest'}</h3>
+                            <p class="text-[11px] font-semibold text-zinc-500">Capster: <span class="text-zinc-800">${item.capster_id || '-'}</span> &bull; ${UTIL.formatRp(item.price)}</p>
                         </div>
-                        ${btnAction}
+                        ${actionBtns}
                     </div>`;
                     container.insertAdjacentHTML('beforeend', html);
                 });
@@ -377,108 +480,203 @@
 
             renderExpenses(data) {
                 const container = document.getElementById('expense-container');
-                Array.from(container.children).forEach(c => {
-                    if(c.id !== 'expense-loading') c.remove();
-                });
+                Array.from(container.children).forEach(c => { if(c.id !== 'expense-loading') c.remove(); });
 
                 let total = 0;
                 if (data.length === 0) {
-                    container.insertAdjacentHTML('beforeend', `<div class="text-center py-4 text-zinc-600 font-black uppercase tracking-widest text-[10px]">Belum ada pengeluaran</div>`);
+                    container.insertAdjacentHTML('beforeend', `<div class="text-center py-6 text-zinc-400 font-semibold text-xs">Bersih.</div>`);
                 } else {
                     data.forEach(item => {
                         const nom = Number(item.nominal) || 0;
                         total += nom;
                         const html = `
-                        <div class="bg-zinc-900 border-2 border-zinc-800 rounded-xl p-3 flex justify-between items-center">
+                        <div class="bg-white border border-zinc-100 rounded-xl p-3.5 flex justify-between items-center shadow-sm">
                             <div>
-                                <p class="font-black text-white text-xs uppercase">${item.deskripsi || '-'}</p>
-                                <p class="text-[9px] font-bold text-zinc-500 uppercase tracking-widest">${item.kategori || '-'}</p>
+                                <p class="font-bold text-zinc-800 text-sm">${item.deskripsi || '-'}</p>
+                                <p class="text-[10px] font-semibold text-zinc-400 uppercase mt-0.5">${item.kategori || '-'}</p>
                             </div>
-                            <span class="font-black text-orange-500 text-sm">- Rp ${nom.toLocaleString('id-ID')}</span>
+                            <span class="font-bold text-red-500 text-sm">- ${UTIL.formatRp(nom)}</span>
                         </div>`;
                         container.insertAdjacentHTML('beforeend', html);
                     });
                 }
-                
-                document.getElementById('expense-total').innerText = `Rp ${total.toLocaleString('id-ID')}`;
+                document.getElementById('expense-total').innerText = UTIL.formatRp(total);
             },
 
+            // --- Aksi Kasir ---
             async updateStatus(id, newStatus) {
-                if(!confirm(`Yakin ubah status jadi ${newStatus}?`)) return;
-
-                const overlay = document.getElementById('loading-overlay');
-                const textLoading = document.getElementById('loading-text');
-                textLoading.innerText = "MENGUPDATE STATUS...";
-                overlay.classList.remove('hidden'); overlay.classList.add('flex');
-
+                UTIL.showLoading("Update Status...");
                 try {
                     const res = await fetch(CONFIG.WEBHOOK_URL, {
-                        method: 'POST',
-                        headers: {'Content-Type': 'application/json'},
+                        method: 'POST', headers: {'Content-Type': 'application/json'},
                         body: JSON.stringify({ action: 'update_status', id: id, status: newStatus })
                     });
-                    
-                    if(res.ok) {
-                        await this.loadData(); // Sync otomatis setelah update
-                    } else { throw new Error("Gagal Update"); }
-                } catch (e) {
-                    alert("Terjadi kesalahan jaringan.");
-                } finally {
-                    overlay.classList.add('hidden'); overlay.classList.remove('flex');
-                }
+                    if(res.ok) await this.loadData(true);
+                } catch (e) { alert("Gagal Update"); }
+                finally { UTIL.hideLoading(); }
+            },
+
+            openCancelModal(id) {
+                STATE.cancelTargetId = id;
+                document.getElementById('cancel-confirm-text').value = '';
+                document.getElementById('btn-submit-cancel').disabled = true;
+                document.getElementById('btn-submit-cancel').classList.add('opacity-50', 'cursor-not-allowed');
+                document.getElementById('modal-cancel').classList.replace('hidden', 'flex');
+            },
+            closeCancelModal() {
+                STATE.cancelTargetId = null;
+                document.getElementById('modal-cancel').classList.replace('flex', 'hidden');
+            },
+            async processCancel() {
+                if(!STATE.cancelTargetId) return;
+                this.closeCancelModal();
+                UTIL.showLoading("Membatalkan Booking...");
+                try {
+                    const res = await fetch(CONFIG.WEBHOOK_URL, {
+                        method: 'POST', headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({ action: 'cancel_book', id: STATE.cancelTargetId })
+                    });
+                    if(res.ok) await this.loadData(true);
+                } catch (e) { alert("Gagal Cancel"); }
+                finally { UTIL.hideLoading(); }
             },
 
             openExpenseModal() {
-                document.getElementById('exp-deskripsi').value = '';
-                document.getElementById('exp-nominal').value = '';
-                document.getElementById('modal-expense').classList.remove('hidden');
-                document.getElementById('modal-expense').classList.add('flex');
+                document.getElementById('exp-deskripsi').value = ''; document.getElementById('exp-nominal').value = '';
+                document.getElementById('modal-expense').classList.replace('hidden', 'flex');
             },
-
-            closeExpenseModal() {
-                document.getElementById('modal-expense').classList.add('hidden');
-                document.getElementById('modal-expense').classList.remove('flex');
-            },
-
+            closeExpenseModal() { document.getElementById('modal-expense').classList.replace('flex', 'hidden'); },
             async submitExpense() {
                 const tgl = new Date().toISOString().split('T')[0];
                 const kat = document.getElementById('exp-kategori').value;
                 const desc = document.getElementById('exp-deskripsi').value.trim();
                 const nom = document.getElementById('exp-nominal').value;
 
-                if(!desc || !nom) return alert("Isi deskripsi dan nominal dulu!");
-
-                const btn = document.getElementById('btn-submit-exp');
-                btn.innerText = "LOADING..."; btn.disabled = true;
+                if(!desc || !nom) return alert("Isi deskripsi dan nominal!");
+                this.closeExpenseModal(); UTIL.showLoading("Mencatat Pengeluaran...");
 
                 try {
                     const res = await fetch(CONFIG.WEBHOOK_URL, {
-                        method: 'POST',
-                        headers: {'Content-Type': 'application/json'},
-                        body: JSON.stringify({ 
-                            action: 'add_expense', 
-                            tanggal: tgl,
-                            branch: STATE.user.branch,
-                            cashier_id: STATE.user.staff_id,
-                            kategori: kat,
-                            deskripsi: desc,
-                            nominal: nom
-                        })
+                        method: 'POST', headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({ action: 'add_expense', tanggal: tgl, branch: STATE.user.branch, cashier_id: STATE.user.staff_id, kategori: kat, deskripsi: desc, nominal: nom })
                     });
-                    
-                    if(res.ok) {
-                        this.closeExpenseModal();
-                        await this.loadData(); // Sync tabel pengeluaran
-                    } else { throw new Error("Gagal Input"); }
-                } catch (e) {
-                    alert("Gagal mencatat pengeluaran.");
-                } finally {
-                    btn.innerText = "SIMPAN"; btn.disabled = false;
+                    if(res.ok) await this.loadData(true);
+                } catch (e) { alert("Gagal Input"); }
+                finally { UTIL.hideLoading(); }
+            },
+
+            // --- Sistem Report ---
+            async loadReportData() {
+                try {
+                    const res = await fetch(CONFIG.WEBHOOK_URL, {
+                        method: 'POST', headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({ action: 'get_cashier_report', branch: STATE.user.branch })
+                    });
+                    const data = await res.json();
+                    if(data.success || data[0]?.success) {
+                        STATE.rawReportData = data.bookings ? data : data[0];
+                    }
+                } catch(e) { console.error("Report fail"); }
+            },
+
+            processReport() {
+                if(!STATE.rawReportData) return;
+                const selectedMonth = document.getElementById('report-month').value; // format "YYYY-MM"
+                if(!selectedMonth) return;
+
+                document.getElementById('report-month-label').innerText = "Bulan: " + selectedMonth;
+
+                // Filter data berdasarkan bulan
+                const books = STATE.rawReportData.bookings.filter(b => b.tanggal && b.tanggal.startsWith(selectedMonth));
+                const exps = STATE.rawReportData.expenses.filter(e => e.tanggal && e.tanggal.startsWith(selectedMonth));
+
+                // Agregasi per hari
+                const dailyStats = {};
+                let grandRev = 0; let grandExp = 0;
+
+                books.forEach(b => {
+                    const d = UTIL.cleanDate(b.tanggal);
+                    const val = Number(b.price) || 0;
+                    if(!dailyStats[d]) dailyStats[d] = { count: 0, rev: 0, exp: 0 };
+                    dailyStats[d].count += 1;
+                    dailyStats[d].rev += val;
+                    grandRev += val;
+                });
+
+                exps.forEach(e => {
+                    const d = UTIL.cleanDate(e.tanggal);
+                    const val = Number(e.nominal) || 0;
+                    if(!dailyStats[d]) dailyStats[d] = { count: 0, rev: 0, exp: 0 };
+                    dailyStats[d].exp += val;
+                    grandExp += val;
+                });
+
+                // Update UI Summary
+                document.getElementById('rep-total-trx').innerText = books.length;
+                document.getElementById('rep-total-revenue').innerText = UTIL.formatRp(grandRev);
+                document.getElementById('rep-total-expense').innerText = UTIL.formatRp(grandExp);
+
+                // Render Tabel
+                const tbody = document.getElementById('report-table-body');
+                tbody.innerHTML = '';
+                const sortedDates = Object.keys(dailyStats).sort();
+
+                if(sortedDates.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="4" class="p-8 text-center text-zinc-400">Tidak ada data untuk bulan ini.</td></tr>`;
+                    return;
                 }
+
+                sortedDates.forEach(d => {
+                    const stat = dailyStats[d];
+                    const tr = `
+                    <tr class="hover:bg-zinc-50 transition-colors">
+                        <td class="p-4 text-zinc-900 font-semibold">${d}</td>
+                        <td class="p-4 text-center text-zinc-600">${stat.count}</td>
+                        <td class="p-4 text-right text-blue-600 font-semibold">${UTIL.formatRp(stat.rev)}</td>
+                        <td class="p-4 text-right text-red-600 font-semibold">${UTIL.formatRp(stat.exp)}</td>
+                    </tr>`;
+                    tbody.insertAdjacentHTML('beforeend', tr);
+                });
+            },
+
+            exportCSV() {
+                const selectedMonth = document.getElementById('report-month').value;
+                const rows = document.querySelectorAll("#report-table-body tr");
+                if(rows.length === 0 || rows[0].innerText.includes("Tidak ada data")) return alert("Tidak ada data untuk diunduh.");
+
+                let csvContent = "data:text/csv;charset=utf-8,Tanggal,Jml Cukur,Pemasukan,Pengeluaran\n";
+                rows.forEach(r => {
+                    const cols = r.querySelectorAll("td");
+                    if(cols.length === 4) {
+                        const rowData = [cols[0].innerText, cols[1].innerText, cols[2].innerText.replace(/[^0-9]/g,''), cols[3].innerText.replace(/[^0-9]/g,'')];
+                        csvContent += rowData.join(",") + "\n";
+                    }
+                });
+
+                const encodedUri = encodeURI(csvContent);
+                const link = document.createElement("a");
+                link.setAttribute("href", encodedUri);
+                link.setAttribute("download", `Laporan_DBP_${selectedMonth}.csv`);
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            },
+
+            exportPDF() {
+                const element = document.getElementById('printable-report');
+                const selectedMonth = document.getElementById('report-month').value;
+                const opt = {
+                    margin:       0.5,
+                    filename:     `Laporan_DBP_${selectedMonth}.pdf`,
+                    image:        { type: 'jpeg', quality: 0.98 },
+                    html2canvas:  { scale: 2 },
+                    jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
+                };
+                UTIL.showLoading("Mencetak PDF...");
+                html2pdf().set(opt).from(element).save().then(() => UTIL.hideLoading());
             }
         };
 
-        // Mulai sistem
         window.onload = () => LOGIN_SYSTEM.init();
     </script>
 </body>
