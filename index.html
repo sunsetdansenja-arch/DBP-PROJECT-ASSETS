@@ -147,6 +147,7 @@
 
     <script>
         const CONFIG = {
+            TENANT_ID: 'DBP', // <--- INI INJEKSI UTAMA KITA
             WEBHOOK_URL: 'https://n8n-mzbmiib3etk4.kangkung.sumopod.my.id/webhook/dbp-public',
             AVAILABLE_HOURS: ["10:00", "11:00", "12:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21:00"]
         };
@@ -160,7 +161,6 @@
         };
 
         const APP_LOGIC = {
-            // STATE DITAMBAH selectedStaffName & selectedPackageName
             state: { branches: [], packages: [], staffs: [], selectedBranch: null, selectedStaff: null, selectedPackage: null, finalPrice: 0, selectedStaffName: null, selectedPackageName: null },
 
             async init() {
@@ -168,7 +168,10 @@
                     const fetchPromise = fetch(CONFIG.WEBHOOK_URL, {
                         method: 'POST',
                         headers: {'Content-Type': 'application/json'},
-                        body: JSON.stringify({ action: 'get_initial_data' })
+                        body: JSON.stringify({ 
+                            action: 'get_initial_data',
+                            tenant_id: CONFIG.TENANT_ID // <--- INJEKSI PAYLOAD
+                        })
                     }).then(res => res.json());
 
                     const [rawData] = await Promise.all([fetchPromise, delay(2000)]);
@@ -237,7 +240,11 @@
                     const res = await fetch(CONFIG.WEBHOOK_URL, {
                         method: 'POST',
                         headers: {'Content-Type': 'application/json'},
-                        body: JSON.stringify({ action: 'get_staff_list', branch_name: name })
+                        body: JSON.stringify({ 
+                            action: 'get_staff_list', 
+                            branch_name: name,
+                            tenant_id: CONFIG.TENANT_ID // <--- INJEKSI PAYLOAD
+                        })
                     });
                     
                     const rawStaff = await res.json();
@@ -281,9 +288,6 @@
                 this.state.selectedPackage = packageId;
                 this.state.finalPrice = price;
 
-                // ==========================================
-                // LOGIC CARI NAMA (AGAR BISA DIKIRIM KE DATABASE)
-                // ==========================================
                 const staff = this.state.staffs.find(s => s.id == staffId);
                 const service = staff ? staff.services.find(sr => sr.id == packageId) : null;
                 this.state.selectedStaffName = staff ? staff.dbp_staff_name : staffId;
@@ -401,16 +405,18 @@
                         method: 'POST',
                         headers: {'Content-Type': 'application/json'},
                         body: JSON.stringify({
-                            action: 'submit_booking', cust_name: name, cust_phone: phone, tanggal: tanggal, jam: jam,
+                            action: 'submit_booking', 
+                            cust_name: name, 
+                            cust_phone: phone, 
+                            tanggal: tanggal, 
+                            jam: jam,
                             branch_id: this.state.selectedBranch, 
                             capster_id: this.state.selectedStaff,
                             package_id: this.state.selectedPackage, 
                             price: this.state.finalPrice,
-                            // =====================================
-                            // PARAMETER BARU UNTUK DIKIRIM KE N8N
-                            // =====================================
                             caps_in_charge: this.state.selectedStaffName,
-                            package_name: this.state.selectedPackageName
+                            package_name: this.state.selectedPackageName,
+                            tenant_id: CONFIG.TENANT_ID // <--- INJEKSI PAYLOAD
                         })
                     });
                     
