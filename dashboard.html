@@ -286,7 +286,10 @@
     <div id="loading-overlay" class="fixed inset-0 bg-white/80 backdrop-blur-sm hidden flex-col items-center justify-center z-[100] transition-all"><div class="w-10 h-10 border-4 border-zinc-200 border-t-zinc-900 rounded-full animate-spin mb-4"></div><h2 id="loading-text" class="font-bold text-zinc-800 tracking-wide text-sm uppercase">Memproses...</h2></div>
 
     <script>
-        const CONFIG = { WEBHOOK_URL: 'https://n8n-mzbmiib3etk4.kangkung.sumopod.my.id/webhook/a6512d05-a51a-4289-9063-9a4f17ac745a' };
+        const CONFIG = { 
+            TENANT_ID: 'DBP',
+            WEBHOOK_URL: 'https://n8n-mzbmiib3etk4.kangkung.sumopod.my.id/webhook/a6512d05-a51a-4289-9063-9a4f17ac745a' 
+        };
         const STATE = { user: null, cancelTargetId: null, syncInterval: null, rawReportData: null, sysDates: null };
 
         const UTIL = {
@@ -344,7 +347,7 @@
                 const u = document.getElementById('userInput').value.trim(); if (!u) return this.triggerError("ISI STAFF ID");
                 UTIL.showLoading("Verifikasi...");
                 try {
-                    const res = await fetch(CONFIG.WEBHOOK_URL, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'login', username: u, password: this.pin }) });
+                    const res = await fetch(CONFIG.WEBHOOK_URL, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'login', username: u, password: this.pin, tenant_id: CONFIG.TENANT_ID }) });
                     const data = await res.json(); const ok = data.success || (data[0] && data[0].success);
                     if (ok) { STATE.user = data.user || data[0].user; localStorage.setItem('dbp_user', JSON.stringify(STATE.user)); this.routeUser(); } else throw new Error();
                 } catch (e) { this.triggerError("AKSES DITOLAK"); } finally { UTIL.hideLoading(); this.pin = ""; this.updateDots(); document.getElementById('userInput').value = ""; }
@@ -376,7 +379,7 @@
                 if(sText) sText.innerText = "Syncing..."; if(sIcon) sIcon.classList.add('animate-spin');
                 if(!silent) { document.getElementById('queue-loading').style.display = 'flex'; document.getElementById('expense-loading').style.display = 'block'; }
                 try {
-                    const res = await fetch(CONFIG.WEBHOOK_URL, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'get_cashier_data', branch: STATE.user.branch }) });
+                    const res = await fetch(CONFIG.WEBHOOK_URL, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'get_cashier_data', branch: STATE.user.branch, tenant_id: CONFIG.TENANT_ID }) });
                     const data = await res.json(); const payload = data[0] || data;
                     if (payload.success) { 
                         STATE.sysDates = payload.sys_dates; 
@@ -442,17 +445,17 @@
                 if (data.length === 0) container.insertAdjacentHTML('beforeend', `<div class="text-center py-6 text-zinc-400 font-semibold text-xs">Belum ada pengeluaran.</div>`);
                 else data.forEach(item => { container.insertAdjacentHTML('beforeend', `<div class="bg-white border border-zinc-100 rounded-xl p-3.5 flex justify-between items-center shadow-sm"><div><p class="font-bold text-zinc-800 text-sm">${item.deskripsi}</p><p class="text-[10px] font-semibold text-zinc-400 uppercase mt-0.5">${item.kategori}</p></div><span class="font-bold text-red-500 text-sm">- ${UTIL.formatRp(item.nominal)}</span></div>`); });
             },
-            async updateStatus(id, newStatus) { UTIL.showLoading("Update..."); try { await fetch(CONFIG.WEBHOOK_URL, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'update_status', id: Number(id), status: newStatus }) }); await this.loadData(true); } catch (e) { alert("Gagal Update"); } finally { UTIL.hideLoading(); } },
+            async updateStatus(id, newStatus) { UTIL.showLoading("Update..."); try { await fetch(CONFIG.WEBHOOK_URL, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'update_status', id: Number(id), status: newStatus, tenant_id: CONFIG.TENANT_ID }) }); await this.loadData(true); } catch (e) { alert("Gagal Update"); } finally { UTIL.hideLoading(); } },
             openCancelModal(id) { STATE.cancelTargetId = id; document.getElementById('cancel-confirm-text').value = ''; document.getElementById('btn-submit-cancel').disabled = true; document.getElementById('btn-submit-cancel').classList.add('opacity-50', 'cursor-not-allowed'); document.getElementById('modal-cancel').classList.replace('hidden', 'flex'); },
             closeCancelModal() { STATE.cancelTargetId = null; document.getElementById('modal-cancel').classList.replace('flex', 'hidden'); },
-            async processCancel() { if(!STATE.cancelTargetId) return; this.closeCancelModal(); UTIL.showLoading("Membatalkan..."); try { await fetch(CONFIG.WEBHOOK_URL, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'cancel_book', id: Number(STATE.cancelTargetId) }) }); await this.loadData(true); } catch (e) { alert("Gagal Cancel"); } finally { UTIL.hideLoading(); } },
+            async processCancel() { if(!STATE.cancelTargetId) return; this.closeCancelModal(); UTIL.showLoading("Membatalkan..."); try { await fetch(CONFIG.WEBHOOK_URL, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'cancel_book', id: Number(STATE.cancelTargetId), tenant_id: CONFIG.TENANT_ID }) }); await this.loadData(true); } catch (e) { alert("Gagal Cancel"); } finally { UTIL.hideLoading(); } },
             openExpenseModal() { document.getElementById('exp-deskripsi').value = ''; document.getElementById('exp-nominal').value = ''; document.getElementById('modal-expense').classList.replace('hidden', 'flex'); },
             closeExpenseModal() { document.getElementById('modal-expense').classList.replace('flex', 'hidden'); },
-            async submitExpense() { const desc = document.getElementById('exp-deskripsi').value.trim(); const nom = document.getElementById('exp-nominal').value; if(!desc || !nom) return alert("Isi form lengkap!"); this.closeExpenseModal(); UTIL.showLoading("Menyimpan..."); try { await fetch(CONFIG.WEBHOOK_URL, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'add_expense', tanggal: STATE.sysDates.today, branch: STATE.user.branch, cashier_id: STATE.user.staff_id, kategori: document.getElementById('exp-kategori').value, deskripsi: desc, nominal: Number(nom) }) }); await this.loadData(true); } catch (e) { alert("Gagal Simpan"); } finally { UTIL.hideLoading(); } },
+            async submitExpense() { const desc = document.getElementById('exp-deskripsi').value.trim(); const nom = document.getElementById('exp-nominal').value; if(!desc || !nom) return alert("Isi form lengkap!"); this.closeExpenseModal(); UTIL.showLoading("Menyimpan..."); try { await fetch(CONFIG.WEBHOOK_URL, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'add_expense', tanggal: STATE.sysDates.today, branch: STATE.user.branch, cashier_id: STATE.user.staff_id, kategori: document.getElementById('exp-kategori').value, deskripsi: desc, nominal: Number(nom), tenant_id: CONFIG.TENANT_ID }) }); await this.loadData(true); } catch (e) { alert("Gagal Simpan"); } finally { UTIL.hideLoading(); } },
 
             async loadReportData() { 
                 try { 
-                    const res = await fetch(CONFIG.WEBHOOK_URL, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'get_cashier_report', branch: STATE.user.branch }) }); 
+                    const res = await fetch(CONFIG.WEBHOOK_URL, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'get_cashier_report', branch: STATE.user.branch, tenant_id: CONFIG.TENANT_ID }) }); 
                     const data = await res.json(); 
                     if(data.success || data[0]?.success) STATE.rawReportData = data.bookings ? data : data[0]; 
                 } catch(e){} 
@@ -506,7 +509,6 @@
             exportPDF() { UTIL.showLoading("Cetak PDF..."); html2pdf().set({margin:0.5, filename:`DBP_Laporan_${document.getElementById('report-month').value}.pdf`, html2canvas:{scale:2}, jsPDF:{unit:'in',format:'a4',orientation:'portrait'}}).from(document.getElementById('printable-report')).save().then(()=>UTIL.hideLoading()); }
         };
 
-        // --- 3. MANAGEMENT LOGIC ---
         const MANAGEMENT_LOGIC = {
             init() {
                 document.getElementById('mgt-greeting').innerText = `Welcome, ${UTIL.toTitleCase(STATE.user.staff_id)}`;
@@ -522,7 +524,7 @@
             async loadData() {
                 UTIL.showLoading("Fetching Data..."); const targetBranch = document.getElementById('mgt-branch-filter').value;
                 try {
-                    const res = await fetch(CONFIG.WEBHOOK_URL, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'get_owner_data', role: STATE.user.role, branch: STATE.user.branch, filter_branch: targetBranch }) });
+                    const res = await fetch(CONFIG.WEBHOOK_URL, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'get_owner_data', role: STATE.user.role, branch: STATE.user.branch, filter_branch: targetBranch, tenant_id: CONFIG.TENANT_ID }) });
                     const data = await res.json(); const payload = data[0] || data;
                     if (payload.success) { this.renderStats(payload.stats); this.renderLeaderboard(payload.leaderboard); }
                 } catch(e) {} finally { UTIL.hideLoading(); }
@@ -540,7 +542,6 @@
             }
         };
 
-        // --- 4. CAPSTER LOGIC ---
         const CAPSTER_LOGIC = {
             init() {
                 this.loadData();
@@ -551,7 +552,7 @@
                 try {
                     const res = await fetch(CONFIG.WEBHOOK_URL, { 
                         method: 'POST', headers: {'Content-Type': 'application/json'}, 
-                        body: JSON.stringify({ action: 'get_capster_data', staff_id: STATE.user.staff_id, branch: STATE.user.branch }) 
+                        body: JSON.stringify({ action: 'get_capster_data', staff_id: STATE.user.staff_id, branch: STATE.user.branch, tenant_id: CONFIG.TENANT_ID }) 
                     });
                     const data = await res.json();
                     const payload = data[0] || data;
